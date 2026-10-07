@@ -13,7 +13,7 @@
  */
 
 const API_URL =
-  "ここにApps ScriptのWebアプリURL";
+  "https://script.google.com/macros/s/AKfycbxQ3y-i2Y3WMtXM58xrrWoIjPQ7t0gNudo_YO6hRMg9zF2AyoqrTnZ7Yj_T35nbAJ6zRA/exec";
 
 
 /* ==================================================
