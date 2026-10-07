@@ -1,49 +1,85 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>オープンキャンパス ボランティア参加確認</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="favicon.png" type="image/png">
+  <title>オープンキャンパス｜ボランティア参加確認</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <link
+    rel="icon"
+    href="favicon.png"
+    type="image/png"
+  >
 </head>
+
 
 <body>
 
   <!-- =========================
        HEADER
   ========================== -->
+
   <header class="header">
+
     <div class="header-inner">
 
       <div class="brand">
-        <div class="brand-icon">🎓</div>
+
+        <div class="brand-icon">
+          🎓
+        </div>
 
         <div>
-          <p class="brand-sub">SCHOOL VOLUNTEER</p>
-          <h1>オープンキャンパス</h1>
+
+          <p class="brand-sub">
+            SCHOOL VOLUNTEER
+          </p>
+
+          <h1>
+            オープンキャンパス
+          </h1>
+
         </div>
+
       </div>
 
-      <div class="header-status">
-        <span class="status-dot"></span>
-        <span>参加状況</span>
-      </div>
+
+      <button
+        id="admin-open-button"
+        class="admin-button"
+      >
+        🔐 管理者
+      </button>
 
     </div>
+
   </header>
+
 
 
   <main class="container">
 
+
     <!-- =========================
-         PAGE TITLE
+         HERO
     ========================== -->
+
     <section class="hero">
 
-      <span class="hero-label">OPEN CAMPUS VOLUNTEER</span>
+      <span class="hero-label">
+        OPEN CAMPUS VOLUNTEER
+      </span>
 
       <h2>
         オーキャン<br>
@@ -52,33 +88,50 @@
 
       <p>
         自分が参加できる日程を選択してください。<br>
-        登録された参加状況は、部員全員で確認できます。
+        登録された参加状況は、みんなで確認できます。
       </p>
 
     </section>
 
 
+
     <!-- =========================
-         INPUT CARD
+         REGISTER
     ========================== -->
+
     <section class="card">
 
       <div class="section-title">
-        <div class="section-number">01</div>
+
+        <div class="section-number">
+          01
+        </div>
 
         <div>
-          <span>REGISTER</span>
-          <h3>参加可能日を登録</h3>
+
+          <span>
+            REGISTER
+          </span>
+
+          <h3>
+            参加可能日を登録
+          </h3>
+
         </div>
+
       </div>
 
 
       <!-- NAME -->
+
       <div class="form-group">
 
         <label for="name">
           名前
-          <span class="required">必須</span>
+
+          <span class="required">
+            必須
+          </span>
         </label>
 
         <input
@@ -91,12 +144,16 @@
       </div>
 
 
-      <!-- DATE -->
+      <!-- DATES -->
+
       <div class="form-group">
 
         <label>
           参加可能日
-          <span class="required">必須</span>
+
+          <span class="required">
+            必須
+          </span>
         </label>
 
         <p class="form-description">
@@ -104,9 +161,14 @@
         </p>
 
 
-        <div id="date-list" class="date-list">
+        <div
+          id="date-list"
+          class="date-list"
+        >
 
-          <!-- JavaScriptで自動生成 -->
+          <div class="loading">
+            日程を読み込んでいます…
+          </div>
 
         </div>
 
@@ -119,61 +181,100 @@
         type="button"
       >
 
-        <span>登録する</span>
-        <span class="button-arrow">→</span>
+        <span>
+          登録する
+        </span>
+
+        <span class="button-arrow">
+          →
+        </span>
 
       </button>
 
 
-      <div id="message" class="message"></div>
+      <div
+        id="message"
+        class="message"
+      ></div>
 
     </section>
 
 
 
     <!-- =========================
-         PARTICIPANTS
+         SUMMARY
     ========================== -->
+
     <section class="card">
 
       <div class="section-title">
 
-        <div class="section-number">02</div>
+        <div class="section-number">
+          02
+        </div>
 
         <div>
-          <span>PARTICIPANTS</span>
-          <h3>参加状況一覧</h3>
+
+          <span>
+            PARTICIPANTS
+          </span>
+
+          <h3>
+            参加状況
+          </h3>
+
         </div>
 
       </div>
 
 
-      <!-- DATE SUMMARY -->
-      <div id="summary-list" class="summary-list">
+      <div
+        id="summary-list"
+        class="summary-list"
+      >
 
-        <!-- JavaScriptで生成 -->
+        <div class="loading">
+          読み込んでいます…
+        </div>
 
       </div>
 
 
       <!-- TABLE -->
+
       <div class="table-wrapper">
 
         <table id="participants-table">
 
           <thead>
+
             <tr id="table-header">
-              <!-- JavaScript -->
+
+              <th>
+                名前
+              </th>
+
             </tr>
+
           </thead>
 
+
           <tbody id="table-body">
-            <!-- JavaScript -->
+
+            <tr>
+
+              <td>
+                読み込んでいます…
+              </td>
+
+            </tr>
+
           </tbody>
 
         </table>
 
       </div>
+
 
       <p class="table-note">
         ※ ○＝参加可能　×＝参加不可
@@ -182,20 +283,138 @@
     </section>
 
 
+
+    <!-- =========================
+         ADMIN PANEL
+    ========================== -->
+
+    <section
+      id="admin-panel"
+      class="admin-panel"
+    >
+
+      <div class="admin-panel-header">
+
+        <div>
+
+          <span>
+            ADMINISTRATION
+          </span>
+
+          <h2>
+            日程管理
+          </h2>
+
+        </div>
+
+        <button
+          id="admin-close-button"
+          class="close-button"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- ADMIN LOGIN -->
+
+      <div
+        id="admin-login"
+        class="admin-login"
+      >
+
+        <p>
+          管理者PINを入力してください。
+        </p>
+
+        <div class="admin-login-row">
+
+          <input
+            type="password"
+            id="admin-pin"
+            placeholder="管理者PIN"
+            autocomplete="off"
+          >
+
+          <button
+            id="admin-login-button"
+            class="primary-small-button"
+          >
+            ログイン
+          </button>
+
+        </div>
+
+        <div
+          id="admin-message"
+          class="admin-message"
+        ></div>
+
+      </div>
+
+
+
+      <!-- ADMIN CONTENT -->
+
+      <div
+        id="admin-content"
+        class="admin-content hidden"
+      >
+
+        <div class="admin-toolbar">
+
+          <div>
+
+            <strong>
+              オーキャン日程
+            </strong>
+
+            <p>
+              日程の追加・変更・削除ができます。
+            </p>
+
+          </div>
+
+          <button
+            id="add-date-button"
+            class="primary-button"
+          >
+            ＋ 日程を追加
+          </button>
+
+        </div>
+
+
+        <div
+          id="admin-date-list"
+          class="admin-date-list"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+
     <!-- =========================
          INFO
     ========================== -->
+
     <section class="info-card">
 
-      <div class="info-icon">ℹ️</div>
+      <div class="info-icon">
+        ℹ️
+      </div>
 
       <div>
 
-        <h3>登録について</h3>
+        <h3>
+          登録について
+        </h3>
 
         <p>
-          一度登録した内容は、同じ名前で再度登録することで変更できます。
-          最新の登録内容が反映されます。
+          一度登録した内容は、同じ名前で再度登録すると最新の内容に更新されます。
         </p>
 
       </div>
@@ -204,6 +423,101 @@
 
 
   </main>
+
+
+
+  <!-- =========================
+       DATE MODAL
+  ========================== -->
+
+  <div
+    id="date-modal"
+    class="modal"
+  >
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <div>
+
+          <span>
+            DATE MANAGEMENT
+          </span>
+
+          <h2 id="modal-title">
+            日程を追加
+          </h2>
+
+        </div>
+
+        <button
+          id="modal-close-button"
+          class="close-button"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <input
+        type="hidden"
+        id="edit-date-id"
+      >
+
+
+      <div class="form-group">
+
+        <label for="event-date">
+          日付
+        </label>
+
+        <input
+          type="date"
+          id="event-date"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="event-title">
+          表示名
+        </label>
+
+        <input
+          type="text"
+          id="event-title"
+          placeholder="例：第1回オープンキャンパス"
+        >
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          id="modal-cancel-button"
+          class="secondary-button"
+        >
+          キャンセル
+        </button>
+
+        <button
+          id="modal-save-button"
+          class="primary-button"
+        >
+          保存する
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
 
 
   <footer class="footer">
@@ -222,4 +536,5 @@
   <script src="script.js"></script>
 
 </body>
+
 </html>
