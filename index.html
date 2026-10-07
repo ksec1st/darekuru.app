@@ -23,7 +23,6 @@
   >
 </head>
 
-
 <body>
 
   <!-- =========================
@@ -41,7 +40,6 @@
         </div>
 
         <div>
-
           <p class="brand-sub">
             SCHOOL VOLUNTEER
           </p>
@@ -49,11 +47,9 @@
           <h1>
             オープンキャンパス
           </h1>
-
         </div>
 
       </div>
-
 
       <button
         id="admin-open-button"
@@ -67,13 +63,14 @@
   </header>
 
 
+  <!-- =========================
+       MAIN
+  ========================== -->
 
   <main class="container">
 
 
-    <!-- =========================
-         HERO
-    ========================== -->
+    <!-- HERO -->
 
     <section class="hero">
 
@@ -94,9 +91,8 @@
     </section>
 
 
-
     <!-- =========================
-         REGISTER
+         PARTICIPATION
     ========================== -->
 
     <section class="card">
@@ -108,7 +104,6 @@
         </div>
 
         <div>
-
           <span>
             REGISTER
           </span>
@@ -116,7 +111,6 @@
           <h3>
             参加可能日を登録
           </h3>
-
         </div>
 
       </div>
@@ -134,17 +128,21 @@
           </span>
         </label>
 
-        <input
-          type="text"
+        <select
           id="name"
-          placeholder="例：山田 太郎"
-          autocomplete="off"
+          class="name-select"
         >
+
+          <option value="">
+            名前を選択してください
+          </option>
+
+        </select>
 
       </div>
 
 
-      <!-- DATES -->
+      <!-- DATE -->
 
       <div class="form-group">
 
@@ -200,9 +198,8 @@
     </section>
 
 
-
     <!-- =========================
-         SUMMARY
+         PARTICIPANTS
     ========================== -->
 
     <section class="card">
@@ -214,7 +211,6 @@
         </div>
 
         <div>
-
           <span>
             PARTICIPANTS
           </span>
@@ -222,11 +218,12 @@
           <h3>
             参加状況
           </h3>
-
         </div>
 
       </div>
 
+
+      <!-- SUMMARY -->
 
       <div
         id="summary-list"
@@ -244,7 +241,7 @@
 
       <div class="table-wrapper">
 
-        <table id="participants-table">
+        <table>
 
           <thead>
 
@@ -257,7 +254,6 @@
             </tr>
 
           </thead>
-
 
           <tbody id="table-body">
 
@@ -283,9 +279,8 @@
     </section>
 
 
-
     <!-- =========================
-         ADMIN PANEL
+         ADMIN
     ========================== -->
 
     <section
@@ -317,7 +312,7 @@
       </div>
 
 
-      <!-- ADMIN LOGIN -->
+      <!-- LOGIN -->
 
       <div
         id="admin-login"
@@ -334,7 +329,6 @@
             type="password"
             id="admin-pin"
             placeholder="管理者PIN"
-            autocomplete="off"
           >
 
           <button
@@ -352,7 +346,6 @@
         ></div>
 
       </div>
-
 
 
       <!-- ADMIN CONTENT -->
@@ -396,10 +389,7 @@
     </section>
 
 
-
-    <!-- =========================
-         INFO
-    ========================== -->
+    <!-- INFO -->
 
     <section class="info-card">
 
@@ -414,16 +404,14 @@
         </h3>
 
         <p>
-          一度登録した内容は、同じ名前で再度登録すると最新の内容に更新されます。
+          同じ名前で再度登録すると、以前の回答が最新の内容に更新されます。
         </p>
 
       </div>
 
     </section>
 
-
   </main>
-
 
 
   <!-- =========================
@@ -519,6 +507,7 @@
   </div>
 
 
+  <!-- FOOTER -->
 
   <footer class="footer">
 
