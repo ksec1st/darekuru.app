@@ -950,6 +950,7 @@ async function loginAdmin() {
 
 
     loadAdminDates();
+    loadAdminMembers();
 
 
   } catch (error) {
@@ -1556,5 +1557,417 @@ function escapeHtml(
       /'/g,
       "&#039;"
     );
+
+}
+
+/* ==================================================
+   管理者：メンバー一覧
+================================================== */
+
+function loadAdminMembers() {
+
+  const container =
+    document.getElementById(
+      "admin-member-list"
+    );
+
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = "";
+
+  if (!members.length) {
+
+    container.innerHTML = `
+      <div class="admin-member-empty">
+        登録されているメンバーはいません。
+      </div>
+    `;
+
+    return;
+  }
+
+  members.forEach(
+    member => {
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "admin-member-item";
+
+      item.innerHTML = `
+
+        <div class="admin-member-name">
+          ${escapeHtml(member)}
+        </div>
+
+        <div class="admin-member-actions">
+
+          <button
+            type="button"
+            class="admin-member-edit"
+          >
+            編集
+          </button>
+
+          <button
+            type="button"
+            class="admin-member-delete"
+          >
+            削除
+          </button>
+
+        </div>
+
+      `;
+
+      /* 編集 */
+
+      item
+        .querySelector(
+          ".admin-member-edit"
+        )
+        .addEventListener(
+          "click",
+          () => editMember(member)
+        );
+
+
+      /* 削除 */
+
+      item
+        .querySelector(
+          ".admin-member-delete"
+        )
+        .addEventListener(
+          "click",
+          () => deleteMember(member)
+        );
+
+
+      container.appendChild(item);
+
+    }
+  );
+
+}
+
+
+/* ==================================================
+   メンバー追加
+================================================== */
+
+async function addMember() {
+
+  const input =
+    document.getElementById(
+      "new-member-name"
+    );
+
+  const name =
+    input.value.trim();
+
+
+  if (!name) {
+
+    alert(
+      "メンバー名を入力してください。"
+    );
+
+    return;
+  }
+
+
+  if (members.includes(name)) {
+
+    alert(
+      "この名前はすでに登録されています。"
+    );
+
+    return;
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify({
+
+              action:
+                "addMember",
+
+              pin:
+                adminPin,
+
+              name:
+                name
+
+            })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    input.value = "";
+
+
+    await loadData();
+
+    loadAdminMembers();
+
+
+    alert(
+      "メンバーを追加しました！"
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "メンバーの追加に失敗しました。"
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+   メンバー編集
+================================================== */
+
+async function editMember(
+  oldName
+) {
+
+  const newName =
+    prompt(
+      "新しい名前を入力してください。",
+      oldName
+    );
+
+
+  if (
+    newName === null
+  ) {
+    return;
+  }
+
+
+  const name =
+    newName.trim();
+
+
+  if (!name) {
+
+    alert(
+      "名前を入力してください。"
+    );
+
+    return;
+  }
+
+
+  if (
+    name !== oldName &&
+    members.includes(name)
+  ) {
+
+    alert(
+      "この名前はすでに登録されています。"
+    );
+
+    return;
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify({
+
+              action:
+                "updateMember",
+
+              pin:
+                adminPin,
+
+              oldName:
+                oldName,
+
+              newName:
+                name
+
+            })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    await loadData();
+
+    loadAdminMembers();
+
+
+    alert(
+      "メンバー名を変更しました！"
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "メンバーの変更に失敗しました。"
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+   メンバー削除
+================================================== */
+
+async function deleteMember(
+  name
+) {
+
+  const confirmed =
+    confirm(
+      `「${name}」をメンバー一覧から削除しますか？\n\n参加状況のデータはそのまま残ります。`
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify({
+
+              action:
+                "deleteMember",
+
+              pin:
+                adminPin,
+
+              name:
+                name
+
+            })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    await loadData();
+
+    loadAdminMembers();
+
+
+    alert(
+      "メンバーを削除しました！"
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      error.message ||
+      "メンバーの削除に失敗しました。"
+    );
+
+  }
 
 }
