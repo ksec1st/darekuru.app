@@ -18,7 +18,6 @@ body {
 
   background: #f3f6fb;
   color: #172033;
-
   line-height: 1.6;
 }
 
@@ -37,7 +36,6 @@ body {
 
 .header-inner {
   max-width: 1100px;
-
   margin: auto;
 
   padding: 18px 24px;
@@ -50,7 +48,6 @@ body {
 .brand {
   display: flex;
   align-items: center;
-
   gap: 14px;
 }
 
@@ -60,8 +57,7 @@ body {
 
   border-radius: 12px;
 
-  background:
-    rgba(255,255,255,0.14);
+  background: rgba(255, 255, 255, 0.14);
 
   display: flex;
   align-items: center;
@@ -72,10 +68,8 @@ body {
 
 .brand-sub {
   font-size: 10px;
-
   letter-spacing: 2px;
-
-  opacity: .7;
+  opacity: 0.7;
 }
 
 .brand h1 {
@@ -88,10 +82,9 @@ body {
 ========================= */
 
 .admin-button {
-  border: 1px solid rgba(255,255,255,.25);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 
-  background:
-    rgba(255,255,255,.1);
+  background: rgba(255, 255, 255, 0.1);
 
   color: white;
 
@@ -105,8 +98,7 @@ body {
 }
 
 .admin-button:hover {
-  background:
-    rgba(255,255,255,.18);
+  background: rgba(255, 255, 255, 0.18);
 }
 
 
@@ -116,7 +108,6 @@ body {
 
 .container {
   width: min(100% - 32px, 1100px);
-
   margin: auto;
 }
 
@@ -144,8 +135,7 @@ body {
 }
 
 .hero h2 {
-  font-size:
-    clamp(32px, 5vw, 52px);
+  font-size: clamp(32px, 5vw, 52px);
 
   line-height: 1.25;
 
@@ -158,7 +148,6 @@ body {
 
 .hero p {
   color: #657085;
-
   font-size: 15px;
 }
 
@@ -179,7 +168,7 @@ body {
   border: 1px solid #e7edf6;
 
   box-shadow:
-    0 8px 30px rgba(20,50,100,.07);
+    0 8px 30px rgba(20, 50, 100, 0.07);
 }
 
 
@@ -274,7 +263,8 @@ body {
 
 input[type="text"],
 input[type="password"],
-input[type="date"] {
+input[type="date"],
+.name-select {
   width: 100%;
 
   padding: 14px 15px;
@@ -288,26 +278,41 @@ input[type="date"] {
   font-size: 16px;
 
   background: white;
+
+  color: #172033;
 }
 
-input:focus {
+.name-select {
+  cursor: pointer;
+}
+
+input:focus,
+.name-select:focus {
   border-color: #0b3d91;
 
   box-shadow:
     0 0 0 3px
-    rgba(11,61,145,.08);
+    rgba(11, 61, 145, 0.08);
+}
+
+.name-select:disabled {
+  background: #f1f3f6;
+
+  color: #8b95a5;
+
+  cursor: not-allowed;
 }
 
 
 /* =========================
-   DATE
+   DATE LIST
 ========================= */
 
 .date-list {
   display: grid;
 
   grid-template-columns:
-    repeat(auto-fit, minmax(250px,1fr));
+    repeat(auto-fit, minmax(250px, 1fr));
 
   gap: 14px;
 }
@@ -325,7 +330,15 @@ input:focus {
 .date-name {
   font-weight: 700;
 
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+.date-name small {
+  color: #718096;
+
+  font-size: 12px;
+
+  font-weight: 500;
 }
 
 .date-options {
@@ -351,7 +364,7 @@ input:focus {
 
   font-weight: 700;
 
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .choice-button:hover {
@@ -416,7 +429,7 @@ input:focus {
 }
 
 .submit-button:disabled {
-  opacity: .6;
+  opacity: 0.6;
 
   cursor: wait;
 }
@@ -502,7 +515,7 @@ input:focus {
   display: grid;
 
   grid-template-columns:
-    repeat(auto-fit, minmax(220px,1fr));
+    repeat(auto-fit, minmax(220px, 1fr));
 
   gap: 14px;
 
@@ -617,6 +630,14 @@ th:first-child {
   color: #d1d7df;
 }
 
+.table-note {
+  color: #7b8799;
+
+  font-size: 12px;
+
+  margin-top: 10px;
+}
+
 
 /* =========================
    ADMIN PANEL
@@ -636,7 +657,7 @@ th:first-child {
   border: 2px solid #0b3d91;
 
   box-shadow:
-    0 12px 35px rgba(11,61,145,.12);
+    0 12px 35px rgba(11, 61, 145, 0.12);
 }
 
 .admin-panel.active {
@@ -809,8 +830,7 @@ th:first-child {
 
   z-index: 1000;
 
-  background:
-    rgba(5,15,35,.55);
+  background: rgba(5, 15, 35, 0.55);
 
   padding: 20px;
 
@@ -833,7 +853,7 @@ th:first-child {
   padding: 25px;
 
   box-shadow:
-    0 20px 60px rgba(0,0,0,.2);
+    0 20px 60px rgba(0, 0, 0, 0.2);
 }
 
 .modal-header {
@@ -925,7 +945,7 @@ th:first-child {
 
   letter-spacing: 2px;
 
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .footer span {
@@ -933,7 +953,7 @@ th:first-child {
 
   font-size: 12px;
 
-  opacity: .45;
+  opacity: 0.45;
 }
 
 
@@ -971,13 +991,11 @@ th:first-child {
   }
 
   .container {
-    width:
-      min(100% - 22px, 1100px);
+    width: min(100% - 22px, 1100px);
   }
 
   .hero {
-    padding:
-      40px 5px 30px;
+    padding: 40px 5px 30px;
   }
 
   .hero h2 {
@@ -1019,6 +1037,14 @@ th:first-child {
 
   .admin-login-row {
     flex-direction: column;
+  }
+
+  .modal {
+    padding: 12px;
+  }
+
+  .modal-content {
+    padding: 20px;
   }
 
 }
