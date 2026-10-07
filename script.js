@@ -86,7 +86,19 @@ function setupEvents() {
       () => openDateModal()
     );
 
+   /* =========================
+   メンバー管理
+========================= */
 
+document
+  .getElementById("add-member-button")
+  .addEventListener(
+    "click",
+    addMember
+  );
+
+   
+   
   document
     .getElementById("modal-close-button")
     .addEventListener(
