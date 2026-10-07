@@ -8,10 +8,6 @@
    設定
 ================================================== */
 
-/*
- * Apps ScriptのWebアプリURLを入れる
- */
-
 const API_URL =
   "https://script.google.com/macros/s/AKfycbxQ3y-i2Y3WMtXM58xrrWoIjPQ7t0gNudo_YO6hRMg9zF2AyoqrTnZ7Yj_T35nbAJ6zRA/exec";
 
@@ -22,10 +18,11 @@ const API_URL =
 
 let eventDates = [];
 
+let members = [];
+
 let answers = {};
 
 let adminPin = "";
-
 
 
 /* ==================================================
@@ -44,15 +41,11 @@ document.addEventListener(
 );
 
 
-
 /* ==================================================
    イベント設定
 ================================================== */
 
 function setupEvents() {
-
-
-  // 登録
 
   document
     .getElementById("submit-button")
@@ -62,8 +55,6 @@ function setupEvents() {
     );
 
 
-  // 管理者ボタン
-
   document
     .getElementById("admin-open-button")
     .addEventListener(
@@ -71,8 +62,6 @@ function setupEvents() {
       openAdminPanel
     );
 
-
-  // 管理者閉じる
 
   document
     .getElementById("admin-close-button")
@@ -82,8 +71,6 @@ function setupEvents() {
     );
 
 
-  // 管理者ログイン
-
   document
     .getElementById("admin-login-button")
     .addEventListener(
@@ -92,8 +79,6 @@ function setupEvents() {
     );
 
 
-  // 日程追加
-
   document
     .getElementById("add-date-button")
     .addEventListener(
@@ -101,8 +86,6 @@ function setupEvents() {
       () => openDateModal()
     );
 
-
-  // モーダル閉じる
 
   document
     .getElementById("modal-close-button")
@@ -120,8 +103,6 @@ function setupEvents() {
     );
 
 
-  // モーダル保存
-
   document
     .getElementById("modal-save-button")
     .addEventListener(
@@ -132,9 +113,8 @@ function setupEvents() {
 }
 
 
-
 /* ==================================================
-   初期データ取得
+   データ取得
 ================================================== */
 
 async function loadData() {
@@ -181,6 +161,12 @@ async function loadData() {
       result.dates || [];
 
 
+    members =
+      result.members || [];
+
+
+    renderMemberSelect();
+
     renderDateList();
 
 
@@ -203,6 +189,78 @@ async function loadData() {
 }
 
 
+/* ==================================================
+   メンバー選択
+================================================== */
+
+function renderMemberSelect() {
+
+  const select =
+    document.getElementById(
+      "name"
+    );
+
+
+  if (!select) {
+    return;
+  }
+
+
+  select.innerHTML = `
+
+    <option value="">
+      名前を選択してください
+    </option>
+
+  `;
+
+
+  if (!members.length) {
+
+    select.innerHTML = `
+
+      <option value="">
+        登録されているメンバーがありません
+      </option>
+
+    `;
+
+    select.disabled = true;
+
+    return;
+
+  }
+
+
+  select.disabled = false;
+
+
+  members.forEach(
+    member => {
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
+      option.value =
+        member;
+
+
+      option.textContent =
+        member;
+
+
+      select.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
 
 /* ==================================================
    日程表示
@@ -222,9 +280,14 @@ function renderDateList() {
   if (!eventDates.length) {
 
     container.innerHTML = `
+
       <div class="loading">
-        現在、登録されているオーキャン日程はありません。
+
+        現在、登録されている
+        オーキャン日程はありません。
+
       </div>
+
     `;
 
     return;
@@ -232,120 +295,143 @@ function renderDateList() {
   }
 
 
-  eventDates.forEach(event => {
+  eventDates.forEach(
+    event => {
 
-    answers[event.id] =
-      answers[event.id] || "";
+      if (
+        answers[event.id] === undefined
+      ) {
 
+        answers[event.id] = "";
 
-    const item =
-      document.createElement(
-        "div"
-      );
-
-
-    item.className =
-      "date-item";
+      }
 
 
-    item.innerHTML = `
-
-      <div class="date-name">
-        ${escapeHtml(event.title)}
-        <br>
-        <small>
-          ${escapeHtml(formatDate(event.date))}
-        </small>
-      </div>
-
-      <div class="date-options">
-
-        <button
-          type="button"
-          class="choice-button"
-          data-date="${event.id}"
-          data-value="○"
-        >
-          ○ 参加できる
-        </button>
-
-        <button
-          type="button"
-          class="choice-button"
-          data-date="${event.id}"
-          data-value="×"
-        >
-          × 参加できない
-        </button>
-
-      </div>
-
-    `;
+      const item =
+        document.createElement(
+          "div"
+        );
 
 
-    container.appendChild(item);
+      item.className =
+        "date-item";
 
-  });
+
+      item.innerHTML = `
+
+        <div class="date-name">
+
+          ${escapeHtml(event.title)}
+
+          <br>
+
+          <small>
+            ${escapeHtml(
+              formatDate(event.date)
+            )}
+          </small>
+
+        </div>
+
+
+        <div class="date-options">
+
+          <button
+            type="button"
+            class="choice-button"
+            data-date="${event.id}"
+            data-value="○"
+          >
+            ○ 参加できる
+          </button>
+
+
+          <button
+            type="button"
+            class="choice-button"
+            data-date="${event.id}"
+            data-value="×"
+          >
+            × 参加できない
+          </button>
+
+        </div>
+
+      `;
+
+
+      container.appendChild(item);
+
+    }
+  );
 
 
   document
-    .querySelectorAll(".choice-button")
-    .forEach(button => {
+    .querySelectorAll(
+      ".choice-button"
+    )
+    .forEach(
+      button => {
 
-      button.addEventListener(
-        "click",
-        () => {
+        button.addEventListener(
+          "click",
+          () => {
 
-          const date =
-            button.dataset.date;
-
-          const value =
-            button.dataset.value;
-
-
-          answers[date] =
-            value;
+            const date =
+              button.dataset.date;
 
 
-          document
-            .querySelectorAll(
-              `.choice-button[data-date="${date}"]`
-            )
-            .forEach(btn => {
+            const value =
+              button.dataset.value;
 
-              btn.classList.remove(
-                "selected-yes",
+
+            answers[date] =
+              value;
+
+
+            document
+              .querySelectorAll(
+                `.choice-button[data-date="${date}"]`
+              )
+              .forEach(
+                btn => {
+
+                  btn.classList.remove(
+                    "selected-yes",
+                    "selected-no"
+                  );
+
+                }
+              );
+
+
+            if (
+              value === "○"
+            ) {
+
+              button.classList.add(
+                "selected-yes"
+              );
+
+            } else {
+
+              button.classList.add(
                 "selected-no"
               );
 
-            });
-
-
-          if (value === "○") {
-
-            button.classList.add(
-              "selected-yes"
-            );
-
-          } else {
-
-            button.classList.add(
-              "selected-no"
-            );
+            }
 
           }
+        );
 
-        }
-      );
-
-    });
+      }
+    );
 
 }
 
 
-
 /* ==================================================
-   参加状況登録
+   参加登録
 ================================================== */
 
 async function submitAnswer() {
@@ -353,14 +439,13 @@ async function submitAnswer() {
   const name =
     document
       .getElementById("name")
-      .value
-      .trim();
+      .value;
 
 
   if (!name) {
 
     showMessage(
-      "名前を入力してください。",
+      "名前を選択してください。",
       "error"
     );
 
@@ -408,6 +493,7 @@ async function submitAnswer() {
 
   button.disabled = true;
 
+
   button.querySelector(
     "span:first-child"
   ).textContent =
@@ -431,11 +517,14 @@ async function submitAnswer() {
           body:
             JSON.stringify({
 
-              action: "saveParticipation",
+              action:
+                "saveParticipation",
 
-              name: name,
+              name:
+                name,
 
-              answers: answers
+              answers:
+                answers
 
             })
 
@@ -480,13 +569,13 @@ async function submitAnswer() {
 
   button.disabled = false;
 
+
   button.querySelector(
     "span:first-child"
   ).textContent =
     "登録する";
 
 }
-
 
 
 /* ==================================================
@@ -502,6 +591,7 @@ function renderParticipants(
       "table-header"
     );
 
+
   const body =
     document.getElementById(
       "table-body"
@@ -513,22 +603,36 @@ function renderParticipants(
   `;
 
 
-  eventDates.forEach(event => {
+  eventDates.forEach(
+    event => {
 
-    const th =
-      document.createElement("th");
+      const th =
+        document.createElement(
+          "th"
+        );
 
-    th.innerHTML = `
-      ${escapeHtml(event.title)}
-      <br>
-      <small>
-        ${escapeHtml(formatDate(event.date))}
-      </small>
-    `;
 
-    header.appendChild(th);
+      th.innerHTML = `
 
-  });
+        ${escapeHtml(
+          event.title
+        )}
+
+        <br>
+
+        <small>
+          ${escapeHtml(
+            formatDate(event.date)
+          )}
+        </small>
+
+      `;
+
+
+      header.appendChild(th);
+
+    }
+  );
 
 
   body.innerHTML = "";
@@ -555,75 +659,95 @@ function renderParticipants(
 
     `;
 
+
     renderSummary([]);
+
 
     return;
 
   }
 
 
-  data.forEach(person => {
+  data.forEach(
+    person => {
 
-    const tr =
-      document.createElement("tr");
-
-
-    const name =
-      document.createElement("td");
-
-    name.className =
-      "name-cell";
-
-    name.textContent =
-      person.name;
+      const tr =
+        document.createElement(
+          "tr"
+        );
 
 
-    tr.appendChild(name);
+      const name =
+        document.createElement(
+          "td"
+        );
 
 
-    eventDates.forEach(event => {
-
-      const td =
-        document.createElement("td");
+      name.className =
+        "name-cell";
 
 
-      const value =
-        person.answers?.[event.id] ||
-        "";
+      name.textContent =
+        person.name;
 
 
-      if (value === "○") {
-
-        td.textContent = "○";
-
-        td.className =
-          "answer-yes";
-
-      } else if (value === "×") {
-
-        td.textContent = "×";
-
-        td.className =
-          "answer-no";
-
-      } else {
-
-        td.textContent = "－";
-
-        td.className =
-          "answer-empty";
-
-      }
+      tr.appendChild(name);
 
 
-      tr.appendChild(td);
+      eventDates.forEach(
+        event => {
 
-    });
+          const td =
+            document.createElement(
+              "td"
+            );
 
 
-    body.appendChild(tr);
+          const value =
+            person.answers &&
+            person.answers[event.id]
+              ? person.answers[event.id]
+              : "";
 
-  });
+
+          if (
+            value === "○"
+          ) {
+
+            td.textContent = "○";
+
+            td.className =
+              "answer-yes";
+
+          } else if (
+            value === "×"
+          ) {
+
+            td.textContent = "×";
+
+            td.className =
+              "answer-no";
+
+          } else {
+
+            td.textContent = "－";
+
+            td.className =
+              "answer-empty";
+
+          }
+
+
+          tr.appendChild(td);
+
+        }
+      );
+
+
+      body.appendChild(tr);
+
+    }
+  );
 
 
   renderSummary(data);
@@ -631,9 +755,8 @@ function renderParticipants(
 }
 
 
-
 /* ==================================================
-   日程別人数
+   日程ごとの参加人数
 ================================================== */
 
 function renderSummary(
@@ -649,55 +772,63 @@ function renderSummary(
   container.innerHTML = "";
 
 
-  eventDates.forEach(event => {
+  eventDates.forEach(
+    event => {
 
-    const count =
-      data.filter(
-        person =>
-          person.answers &&
-          person.answers[event.id] === "○"
-      ).length;
-
-
-    const card =
-      document.createElement("div");
+      const count =
+        data.filter(
+          person =>
+            person.answers &&
+            person.answers[event.id] === "○"
+        ).length;
 
 
-    card.className =
-      "summary-card";
+      const card =
+        document.createElement(
+          "div"
+        );
 
 
-    card.innerHTML = `
-
-      <div class="summary-date">
-
-        ${escapeHtml(event.title)}
-
-        <br>
-
-        ${escapeHtml(formatDate(event.date))}
-
-      </div>
-
-      <div class="summary-count">
-
-        ${count}
-
-        <span>
-          人が参加可能
-        </span>
-
-      </div>
-
-    `;
+      card.className =
+        "summary-card";
 
 
-    container.appendChild(card);
+      card.innerHTML = `
 
-  });
+        <div class="summary-date">
+
+          ${escapeHtml(
+            event.title
+          )}
+
+          <br>
+
+          ${escapeHtml(
+            formatDate(event.date)
+          )}
+
+        </div>
+
+
+        <div class="summary-count">
+
+          ${count}
+
+          <span>
+            人が参加可能
+          </span>
+
+        </div>
+
+      `;
+
+
+      container.appendChild(card);
+
+    }
+  );
 
 }
-
 
 
 /* ==================================================
@@ -735,7 +866,6 @@ function closeAdminPanel() {
     );
 
 }
-
 
 
 /* ==================================================
@@ -823,9 +953,8 @@ async function loginAdmin() {
 }
 
 
-
 /* ==================================================
-   管理者用日程一覧
+   管理者：日程一覧
 ================================================== */
 
 function loadAdminDates() {
@@ -842,9 +971,11 @@ function loadAdminDates() {
   if (!eventDates.length) {
 
     container.innerHTML = `
+
       <div class="loading">
         登録されている日程はありません。
       </div>
+
     `;
 
     return;
@@ -852,103 +983,119 @@ function loadAdminDates() {
   }
 
 
-  eventDates.forEach(event => {
+  eventDates.forEach(
+    event => {
 
-    const item =
-      document.createElement(
-        "div"
-      );
-
-
-    item.className =
-      "admin-date-item";
+      const item =
+        document.createElement(
+          "div"
+        );
 
 
-    item.innerHTML = `
-
-      <div class="admin-date-info">
-
-        <strong>
-          ${escapeHtml(event.title)}
-        </strong>
-
-        <span>
-          ${escapeHtml(formatDate(event.date))}
-        </span>
-
-      </div>
+      item.className =
+        "admin-date-item";
 
 
-      <div class="admin-date-actions">
+      item.innerHTML = `
 
-        <button
-          class="edit-button"
-          data-id="${event.id}"
-        >
-          ✏️ 編集
-        </button>
+        <div class="admin-date-info">
 
-        <button
-          class="delete-button"
-          data-id="${event.id}"
-        >
-          🗑️ 削除
-        </button>
+          <strong>
+            ${escapeHtml(
+              event.title
+            )}
+          </strong>
 
-      </div>
+          <span>
+            ${escapeHtml(
+              formatDate(event.date)
+            )}
+          </span>
 
-    `;
+        </div>
 
 
-    container.appendChild(item);
+        <div class="admin-date-actions">
 
-  });
+          <button
+            class="edit-button"
+            data-id="${event.id}"
+          >
+            ✏️ 編集
+          </button>
+
+
+          <button
+            class="delete-button"
+            data-id="${event.id}"
+          >
+            🗑️ 削除
+          </button>
+
+        </div>
+
+      `;
+
+
+      container.appendChild(item);
+
+    }
+  );
 
 
   document
-    .querySelectorAll(".edit-button")
-    .forEach(button => {
+    .querySelectorAll(
+      ".edit-button"
+    )
+    .forEach(
+      button => {
 
-      button.addEventListener(
-        "click",
-        () => {
+        button.addEventListener(
+          "click",
+          () => {
 
-          const event =
-            eventDates.find(
-              item =>
-                item.id ===
-                button.dataset.id
-            );
+            const event =
+              eventDates.find(
+                item =>
+                  item.id ===
+                  button.dataset.id
+              );
 
 
-          if (event) {
+            if (event) {
 
-            openDateModal(event);
+              openDateModal(
+                event
+              );
+
+            }
 
           }
+        );
 
-        }
-      );
-
-    });
+      }
+    );
 
 
   document
-    .querySelectorAll(".delete-button")
-    .forEach(button => {
+    .querySelectorAll(
+      ".delete-button"
+    )
+    .forEach(
+      button => {
 
-      button.addEventListener(
-        "click",
-        () =>
-          deleteDate(
-            button.dataset.id
-          )
-      );
+        button.addEventListener(
+          "click",
+          () =>
+            deleteDate(
+              button.dataset.id
+            )
+        );
 
-    });
+      }
+    );
 
 }
-
 
 
 /* ==================================================
@@ -1037,7 +1184,6 @@ function closeDateModal() {
 }
 
 
-
 /* ==================================================
    日程保存
 ================================================== */
@@ -1116,11 +1262,14 @@ async function saveDate() {
               pin:
                 adminPin,
 
-              id: id,
+              id:
+                id,
 
-              date: date,
+              date:
+                date,
 
-              title: title
+              title:
+                title
 
             })
 
@@ -1162,7 +1311,6 @@ async function saveDate() {
 }
 
 
-
 /* ==================================================
    日程削除
 ================================================== */
@@ -1179,9 +1327,7 @@ async function deleteDate(
 
 
   if (!event) {
-
     return;
-
   }
 
 
@@ -1192,9 +1338,7 @@ async function deleteDate(
 
 
   if (!confirmed) {
-
     return;
-
   }
 
 
@@ -1261,7 +1405,6 @@ async function deleteDate(
 }
 
 
-
 /* ==================================================
    メッセージ
 ================================================== */
@@ -1319,7 +1462,6 @@ function showAdminMessage(
 }
 
 
-
 /* ==================================================
    日付表示
 ================================================== */
@@ -1329,9 +1471,7 @@ function formatDate(
 ) {
 
   if (!dateString) {
-
     return "";
-
   }
 
 
@@ -1368,7 +1508,6 @@ function formatDate(
 }
 
 
-
 /* ==================================================
    HTMLエスケープ
 ================================================== */
@@ -1377,23 +1516,30 @@ function escapeHtml(
   value
 ) {
 
-  return String(value || "")
+  return String(
+    value || ""
+  )
+
     .replace(
       /&/g,
       "&amp;"
     )
+
     .replace(
       /</g,
       "&lt;"
     )
+
     .replace(
       />/g,
       "&gt;"
     )
+
     .replace(
       /"/g,
       "&quot;"
     )
+
     .replace(
       /'/g,
       "&#039;"
