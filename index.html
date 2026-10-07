@@ -64,12 +64,26 @@
 <button id="admin-login-button" class="primary-small-button">ログイン</button></div>
 <div id="admin-message" class="admin-message"></div>
 </div>
+
 <!-- ADMIN CONTENT -->
 <div id="admin-content" class="admin-content hidden">
-<div class="admin-toolbar">
-<div><strong>オーキャン日程</strong><p>日程の追加・変更・削除ができます。</p></div>
+
+<!-- =========================
+     MEMBER MANAGEMENT
+========================== -->
+<div class="admin-toolbar"><div>
+<strong>👥 生徒管理</strong><p>参加者として登録するメンバーを管理できます。</p></div></div>
+<div class="member-add-area"><input type="text" id="new-member-name" placeholder="生徒氏名を入力">
+<button id="add-member-button" class="primary-button">＋ 生徒を追加</button></div>
+<div id="admin-member-list" class="admin-member-list"></div>
+<!-- =========================
+     DATE MANAGEMENT
+========================== -->
+<div class="admin-toolbar admin-toolbar-date">
+<div><strong>📅 オーキャン日程</strong><p>日程の追加・変更・削除ができます。</p></div>
 <button id="add-date-button" class="primary-button">＋ 日程を追加</button></div>
-<div id="admin-date-list" class="admin-date-list" ></div>
+<div id="admin-date-list" class="admin-date-list"></div>
+       
 </div></section>
 <!-- INFO -->
 <section class="info-card">
@@ -86,103 +100,22 @@
 <div id="date-modal" class="modal">
 <div class="modal-content">
 <div class="modal-header">
-<div>
+<div><span>DATE MANAGEMENT</span><h2 id="modal-title">日程を追加</h2></div>
+<button id="modal-close-button" class="close-button">×</button></div>
+<input type="hidden" id="edit-date-id">
+<div class="form-group"><label for="event-date">日付</label>
+<input type="date" id="event-date"></div>
+<div class="form-group"><label for="event-title">表示名</label>
+<input type="text" id="event-title" placeholder="例：第1回オープンキャンパス"></div>
+<div class="modal-actions">
+<button id="modal-cancel-button" class="secondary-button">キャンセル</button>
+<button id="modal-save-button" class="primary-button">保存する</button></div></div></div>
 
-          <span>
-            DATE MANAGEMENT
-          </span>
+<!-- FOOTER -->
+<footer class="footer">
+<p>SCHOOL VOLUNTEER SYSTEM</p><span>Open Campus Volunteer</span>
+</footer>
 
-          <h2 id="modal-title">
-            日程を追加
-          </h2>
-
-        </div>
-
-        <button
-          id="modal-close-button"
-          class="close-button"
-        >
-          ×
-        </button>
-
-      </div>
-
-
-      <input
-        type="hidden"
-        id="edit-date-id"
-      >
-
-
-      <div class="form-group">
-
-        <label for="event-date">
-          日付
-        </label>
-
-        <input
-          type="date"
-          id="event-date"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label for="event-title">
-          表示名
-        </label>
-
-        <input
-          type="text"
-          id="event-title"
-          placeholder="例：第1回オープンキャンパス"
-        >
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        <button
-          id="modal-cancel-button"
-          class="secondary-button"
-        >
-          キャンセル
-        </button>
-
-        <button
-          id="modal-save-button"
-          class="primary-button"
-        >
-          保存する
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- FOOTER -->
-
-  <footer class="footer">
-
-    <p>
-      SCHOOL VOLUNTEER SYSTEM
-    </p>
-
-    <span>
-      Open Campus Volunteer
-    </span>
-
-  </footer>
-
-
-  <script src="script.js"></script>
-
+<script src="script.js"></script>
 </body>
-
 </html>
