@@ -1,433 +1,92 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>オープンキャンパス｜ボランティア参加確認</title>
-
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
-
-  <link
-    rel="icon"
-    href="favicon.png"
-    type="image/png"
-  >
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width, initial-scale=1.0">
+<title>KSOC参加確認｜KSEC 1st</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon.png"type="image/png">
 </head>
-
 <body>
-
-  <!-- =========================
+<!-- =========================
        HEADER
-  ========================== -->
+========================== -->
+<header class="header">
+<div class="header-inner">
+<div class="brand"><div class="brand-icon">🎓</div><div><p class="brand-sub">KyotoShoeiVolunteer</p><h1>オープンキャンパス</h1></div></div>
+<button id="admin-open-button" class="admin-button">🔐 管理者</button></div></header>
 
-  <header class="header">
-
-    <div class="header-inner">
-
-      <div class="brand">
-
-        <div class="brand-icon">
-          🎓
-        </div>
-
-        <div>
-          <p class="brand-sub">
-            SCHOOL VOLUNTEER
-          </p>
-
-          <h1>
-            オープンキャンパス
-          </h1>
-        </div>
-
-      </div>
-
-      <button
-        id="admin-open-button"
-        class="admin-button"
-      >
-        🔐 管理者
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <!-- =========================
+<!-- =========================
        MAIN
-  ========================== -->
-
-  <main class="container">
-
-
-    <!-- HERO -->
-
-    <section class="hero">
-
-      <span class="hero-label">
-        OPEN CAMPUS VOLUNTEER
-      </span>
-
-      <h2>
-        オーキャン<br>
-        <span>ボランティア参加確認</span>
-      </h2>
-
-      <p>
-        自分が参加できる日程を選択してください。<br>
-        登録された参加状況は、みんなで確認できます。
-      </p>
-
-    </section>
-
-
-    <!-- =========================
+========================== -->
+<main class="container">
+<section class="hero">
+<span class="hero-label">OPEN CAMPUS VOLUNTEER</span><h2><span>KSOC参加確認</span></h2>
+<p>自分が参加できる日程を選択してください。<br>登録された参加状況は、みんなで確認できます。</p>
+</section>
+<!-- =========================
          PARTICIPATION
-    ========================== -->
-
-    <section class="card">
-
-      <div class="section-title">
-
-        <div class="section-number">
-          01
-        </div>
-
-        <div>
-          <span>
-            REGISTER
-          </span>
-
-          <h3>
-            参加可能日を登録
-          </h3>
-        </div>
-
-      </div>
-
-
-      <!-- NAME -->
-
-      <div class="form-group">
-
-        <label for="name">
-          名前
-
-          <span class="required">
-            必須
-          </span>
-        </label>
-
-        <select
-          id="name"
-          class="name-select"
-        >
-
-          <option value="">
-            名前を選択してください
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <!-- DATE -->
-
-      <div class="form-group">
-
-        <label>
-          参加可能日
-
-          <span class="required">
-            必須
-          </span>
-        </label>
-
-        <p class="form-description">
-          参加できる日は「○」、参加できない日は「×」を選択してください。
-        </p>
-
-
-        <div
-          id="date-list"
-          class="date-list"
-        >
-
-          <div class="loading">
-            日程を読み込んでいます…
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <button
-        id="submit-button"
-        class="submit-button"
-        type="button"
-      >
-
-        <span>
-          登録する
-        </span>
-
-        <span class="button-arrow">
-          →
-        </span>
-
-      </button>
-
-
-      <div
-        id="message"
-        class="message"
-      ></div>
-
-    </section>
-
-
-    <!-- =========================
+========================== -->
+<section class="card">
+<div class="section-title"><div class="section-number">01</div><div><span>REGISTER</span>
+<h3>参加可能日を登録</h3></div></div>
+<!-- NAME -->
+<div class="form-group">
+<label for="name">名前<span class="required">必須</span></label><select id="name"class="name-select"><option value="">名前を選択してください</option> </select></div>
+<!-- DATE -->
+<div class="form-group">
+<label>参加可能日<span class="required">必須</span></label><p class="form-description">参加できる日は「○」、参加できない日は「×」を選択してください。</p>
+<div id="date-list" class="date-list"><div class="loading">日程を読み込んでいます…</div>
+</div></div><button id="submit-button"class="submit-button" type="button"><span>登録する</span><span class="button-arrow"> →</span></button>
+<div id="message" class="message"></div>
+</section>
+<!-- =========================
          PARTICIPANTS
-    ========================== -->
+========================== -->
+<section class="card">
+<div class="section-title"><div class="section-number">02</div><div><span>PARTICIPANTS</span><h3>参加状況</h3></div></div>
+<!-- SUMMARY -->
+<div id="summary-list" class="summary-list"><div class="loading">読み込んでいます…</div></div>
+<!-- TABLE -->
+<div class="table-wrapper"><table><thead><tr id="table-header"><th>名前</th></tr></thead><tbody id="table-body"><tr><td> 読み込んでいます…</td></tr></tbody></table></div><p class="table-note">※ ○＝参加可能　×＝参加不可</p>
+</section>
 
-    <section class="card">
-
-      <div class="section-title">
-
-        <div class="section-number">
-          02
-        </div>
-
-        <div>
-          <span>
-            PARTICIPANTS
-          </span>
-
-          <h3>
-            参加状況
-          </h3>
-        </div>
-
-      </div>
-
-
-      <!-- SUMMARY -->
-
-      <div
-        id="summary-list"
-        class="summary-list"
-      >
-
-        <div class="loading">
-          読み込んでいます…
-        </div>
-
-      </div>
-
-
-      <!-- TABLE -->
-
-      <div class="table-wrapper">
-
-        <table>
-
-          <thead>
-
-            <tr id="table-header">
-
-              <th>
-                名前
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody id="table-body">
-
-            <tr>
-
-              <td>
-                読み込んでいます…
-              </td>
-
-            </tr>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-
-      <p class="table-note">
-        ※ ○＝参加可能　×＝参加不可
-      </p>
-
-    </section>
-
-
-    <!-- =========================
+<!-- =========================
          ADMIN
-    ========================== -->
+========================== -->
+<section id="admin-panel" class="admin-panel">
+<div class="admin-panel-header"><div><span>ADMINISTRATION</span><h2>日程管理</h2></div>
+<button id="admin-close-button" class="close-button">×</button></div>
+<!-- LOGIN -->
+<div id="admin-login" class="admin-login">
+<p>管理者PINを入力してください。</p><div class="admin-login-row">
+<input type="password" id="admin-pin" placeholder="管理者PIN">
+<button id="admin-login-button" class="primary-small-button">ログイン</button></div>
+<div id="admin-message" class="admin-message"></div>
+</div>
+<!-- ADMIN CONTENT -->
+<div id="admin-content" class="admin-content hidden">
+<div class="admin-toolbar">
+<div><strong>オーキャン日程</strong><p>日程の追加・変更・削除ができます。</p></div>
+<button id="add-date-button" class="primary-button">＋ 日程を追加</button></div>
+<div id="admin-date-list" class="admin-date-list" ></div>
+</div></section>
+<!-- INFO -->
+<section class="info-card">
+<div class="info-icon">ℹ️</div>
+<div>
+<h3>登録について</h3><p>同じ名前で再度登録すると、以前の回答が最新の内容に更新されます。</p></div>
 
-    <section
-      id="admin-panel"
-      class="admin-panel"
-    >
+</section>
+</main>
 
-      <div class="admin-panel-header">
-
-        <div>
-
-          <span>
-            ADMINISTRATION
-          </span>
-
-          <h2>
-            日程管理
-          </h2>
-
-        </div>
-
-        <button
-          id="admin-close-button"
-          class="close-button"
-        >
-          ×
-        </button>
-
-      </div>
-
-
-      <!-- LOGIN -->
-
-      <div
-        id="admin-login"
-        class="admin-login"
-      >
-
-        <p>
-          管理者PINを入力してください。
-        </p>
-
-        <div class="admin-login-row">
-
-          <input
-            type="password"
-            id="admin-pin"
-            placeholder="管理者PIN"
-          >
-
-          <button
-            id="admin-login-button"
-            class="primary-small-button"
-          >
-            ログイン
-          </button>
-
-        </div>
-
-        <div
-          id="admin-message"
-          class="admin-message"
-        ></div>
-
-      </div>
-
-
-      <!-- ADMIN CONTENT -->
-
-      <div
-        id="admin-content"
-        class="admin-content hidden"
-      >
-
-        <div class="admin-toolbar">
-
-          <div>
-
-            <strong>
-              オーキャン日程
-            </strong>
-
-            <p>
-              日程の追加・変更・削除ができます。
-            </p>
-
-          </div>
-
-          <button
-            id="add-date-button"
-            class="primary-button"
-          >
-            ＋ 日程を追加
-          </button>
-
-        </div>
-
-
-        <div
-          id="admin-date-list"
-          class="admin-date-list"
-        ></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- INFO -->
-
-    <section class="info-card">
-
-      <div class="info-icon">
-        ℹ️
-      </div>
-
-      <div>
-
-        <h3>
-          登録について
-        </h3>
-
-        <p>
-          同じ名前で再度登録すると、以前の回答が最新の内容に更新されます。
-        </p>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- =========================
+<!-- =========================
        DATE MODAL
-  ========================== -->
-
-  <div
-    id="date-modal"
-    class="modal"
-  >
-
-    <div class="modal-content">
-
-      <div class="modal-header">
-
-        <div>
+========================== -->
+<div id="date-modal" class="modal">
+<div class="modal-content">
+<div class="modal-header">
+<div>
 
           <span>
             DATE MANAGEMENT
