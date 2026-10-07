@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>オープンキャンパス ボランティア参加確認</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.png" type="image/png">
+</head>
+
+<body>
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+  <header class="header">
+    <div class="header-inner">
+
+      <div class="brand">
+        <div class="brand-icon">🎓</div>
+
+        <div>
+          <p class="brand-sub">SCHOOL VOLUNTEER</p>
+          <h1>オープンキャンパス</h1>
+        </div>
+      </div>
+
+      <div class="header-status">
+        <span class="status-dot"></span>
+        <span>参加状況</span>
+      </div>
+
+    </div>
+  </header>
+
+
+  <main class="container">
+
+    <!-- =========================
+         PAGE TITLE
+    ========================== -->
+    <section class="hero">
+
+      <span class="hero-label">OPEN CAMPUS VOLUNTEER</span>
+
+      <h2>
+        オーキャン<br>
+        <span>ボランティア参加確認</span>
+      </h2>
+
+      <p>
+        自分が参加できる日程を選択してください。<br>
+        登録された参加状況は、部員全員で確認できます。
+      </p>
+
+    </section>
+
+
+    <!-- =========================
+         INPUT CARD
+    ========================== -->
+    <section class="card">
+
+      <div class="section-title">
+        <div class="section-number">01</div>
+
+        <div>
+          <span>REGISTER</span>
+          <h3>参加可能日を登録</h3>
+        </div>
+      </div>
+
+
+      <!-- NAME -->
+      <div class="form-group">
+
+        <label for="name">
+          名前
+          <span class="required">必須</span>
+        </label>
+
+        <input
+          type="text"
+          id="name"
+          placeholder="例：山田 太郎"
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <!-- DATE -->
+      <div class="form-group">
+
+        <label>
+          参加可能日
+          <span class="required">必須</span>
+        </label>
+
+        <p class="form-description">
+          参加できる日は「○」、参加できない日は「×」を選択してください。
+        </p>
+
+
+        <div id="date-list" class="date-list">
+
+          <!-- JavaScriptで自動生成 -->
+
+        </div>
+
+      </div>
+
+
+      <button
+        id="submit-button"
+        class="submit-button"
+        type="button"
+      >
+
+        <span>登録する</span>
+        <span class="button-arrow">→</span>
+
+      </button>
+
+
+      <div id="message" class="message"></div>
+
+    </section>
+
+
+
+    <!-- =========================
+         PARTICIPANTS
+    ========================== -->
+    <section class="card">
+
+      <div class="section-title">
+
+        <div class="section-number">02</div>
+
+        <div>
+          <span>PARTICIPANTS</span>
+          <h3>参加状況一覧</h3>
+        </div>
+
+      </div>
+
+
+      <!-- DATE SUMMARY -->
+      <div id="summary-list" class="summary-list">
+
+        <!-- JavaScriptで生成 -->
+
+      </div>
+
+
+      <!-- TABLE -->
+      <div class="table-wrapper">
+
+        <table id="participants-table">
+
+          <thead>
+            <tr id="table-header">
+              <!-- JavaScript -->
+            </tr>
+          </thead>
+
+          <tbody id="table-body">
+            <!-- JavaScript -->
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <p class="table-note">
+        ※ ○＝参加可能　×＝参加不可
+      </p>
+
+    </section>
+
+
+    <!-- =========================
+         INFO
+    ========================== -->
+    <section class="info-card">
+
+      <div class="info-icon">ℹ️</div>
+
+      <div>
+
+        <h3>登録について</h3>
+
+        <p>
+          一度登録した内容は、同じ名前で再度登録することで変更できます。
+          最新の登録内容が反映されます。
+        </p>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <footer class="footer">
+
+    <p>
+      SCHOOL VOLUNTEER SYSTEM
+    </p>
+
+    <span>
+      Open Campus Volunteer
+    </span>
+
+  </footer>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>
