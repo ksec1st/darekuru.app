@@ -1,103 +1,261 @@
 /* ==================================================
-   オープンキャンパス ボランティア参加確認
-   script.js
+   オープンキャンパス
+   ボランティア参加確認システム
 ================================================== */
 
 
 /* ==================================================
-   ① Apps Script URL
+   設定
 ================================================== */
 
 /*
-  Google Apps ScriptをWebアプリとして公開したら、
-  下のURLを自分のApps Script URLに変更してください。
-
-  例：
-  https://script.google.com/macros/s/XXXXXXXXXXXX/exec
-*/
+ * Apps ScriptのWebアプリURLを入れる
+ */
 
 const API_URL =
-  "ここにApps ScriptのWebアプリURLを入れる";
+  "ここにApps ScriptのWebアプリURL";
 
 
 /* ==================================================
-   ② オープンキャンパス日程
+   データ
 ================================================== */
 
-/*
-  日程を追加・変更するときはここを編集します。
+let eventDates = [];
 
-  id：
-  スプレッドシート側で使用する識別番号
+let answers = {};
 
-  label：
-  画面に表示する日程
-*/
+let adminPin = "";
 
-const EVENT_DATES = [
-  {
-    id: "2026-05-13",
-    label: "5月13日（水）"
-  },
-  {
-    id: "2026-06-17",
-    label: "6月17日（水）"
-  },
-  {
-    id: "2026-07-22",
-    label: "7月22日（水）"
+
+
+/* ==================================================
+   初期化
+================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    setupEvents();
+
+    loadData();
+
   }
-];
+);
 
-
-/* ==================================================
-   ③ 現在選択されている回答
-================================================== */
-
-const answers = {};
 
 
 /* ==================================================
-   ④ 初期化
+   イベント設定
 ================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+function setupEvents() {
 
-  createDateButtons();
+
+  // 登録
 
   document
     .getElementById("submit-button")
-    .addEventListener("click", submitAnswer);
+    .addEventListener(
+      "click",
+      submitAnswer
+    );
 
-  loadParticipants();
 
-});
+  // 管理者ボタン
+
+  document
+    .getElementById("admin-open-button")
+    .addEventListener(
+      "click",
+      openAdminPanel
+    );
+
+
+  // 管理者閉じる
+
+  document
+    .getElementById("admin-close-button")
+    .addEventListener(
+      "click",
+      closeAdminPanel
+    );
+
+
+  // 管理者ログイン
+
+  document
+    .getElementById("admin-login-button")
+    .addEventListener(
+      "click",
+      loginAdmin
+    );
+
+
+  // 日程追加
+
+  document
+    .getElementById("add-date-button")
+    .addEventListener(
+      "click",
+      () => openDateModal()
+    );
+
+
+  // モーダル閉じる
+
+  document
+    .getElementById("modal-close-button")
+    .addEventListener(
+      "click",
+      closeDateModal
+    );
+
+
+  document
+    .getElementById("modal-cancel-button")
+    .addEventListener(
+      "click",
+      closeDateModal
+    );
+
+
+  // モーダル保存
+
+  document
+    .getElementById("modal-save-button")
+    .addEventListener(
+      "click",
+      saveDate
+    );
+
+}
+
 
 
 /* ==================================================
-   ⑤ 日程ボタン生成
+   初期データ取得
 ================================================== */
 
-function createDateButtons() {
+async function loadData() {
+
+  if (
+    !API_URL ||
+    API_URL.includes(
+      "ここにApps Script"
+    )
+  ) {
+
+    showMessage(
+      "script.jsにApps ScriptのURLを設定してください。",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        `${API_URL}?action=getAll`
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    eventDates =
+      result.dates || [];
+
+
+    renderDateList();
+
+
+    renderParticipants(
+      result.participants || []
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      "データを取得できませんでした。",
+      "error"
+    );
+
+  }
+
+}
+
+
+
+/* ==================================================
+   日程表示
+================================================== */
+
+function renderDateList() {
 
   const container =
-    document.getElementById("date-list");
+    document.getElementById(
+      "date-list"
+    );
+
 
   container.innerHTML = "";
 
-  EVENT_DATES.forEach(event => {
 
-    answers[event.id] = "";
+  if (!eventDates.length) {
+
+    container.innerHTML = `
+      <div class="loading">
+        現在、登録されているオーキャン日程はありません。
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  eventDates.forEach(event => {
+
+    answers[event.id] =
+      answers[event.id] || "";
+
 
     const item =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    item.className = "date-item";
+
+    item.className =
+      "date-item";
+
 
     item.innerHTML = `
 
       <div class="date-name">
-        ${event.label}
+        ${escapeHtml(event.title)}
+        <br>
+        <small>
+          ${escapeHtml(formatDate(event.date))}
+        </small>
       </div>
 
       <div class="date-options">
@@ -124,75 +282,70 @@ function createDateButtons() {
 
     `;
 
+
     container.appendChild(item);
 
   });
 
 
-  /*
-    ○ / × ボタンのクリック処理
-  */
-
   document
     .querySelectorAll(".choice-button")
     .forEach(button => {
 
-      button.addEventListener("click", () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        const date =
-          button.dataset.date;
+          const date =
+            button.dataset.date;
 
-        const value =
-          button.dataset.value;
-
-        answers[date] = value;
+          const value =
+            button.dataset.value;
 
 
-        /*
-          同じ日程のボタンをリセット
-        */
+          answers[date] =
+            value;
 
-        document
-          .querySelectorAll(
-            `.choice-button[data-date="${date}"]`
-          )
-          .forEach(btn => {
 
-            btn.classList.remove(
-              "selected-yes",
+          document
+            .querySelectorAll(
+              `.choice-button[data-date="${date}"]`
+            )
+            .forEach(btn => {
+
+              btn.classList.remove(
+                "selected-yes",
+                "selected-no"
+              );
+
+            });
+
+
+          if (value === "○") {
+
+            button.classList.add(
+              "selected-yes"
+            );
+
+          } else {
+
+            button.classList.add(
               "selected-no"
             );
 
-          });
-
-
-        /*
-          選択したボタンを強調
-        */
-
-        if (value === "○") {
-
-          button.classList.add(
-            "selected-yes"
-          );
-
-        } else {
-
-          button.classList.add(
-            "selected-no"
-          );
+          }
 
         }
-
-      });
+      );
 
     });
 
 }
 
 
+
 /* ==================================================
-   ⑥ 登録
+   参加状況登録
 ================================================== */
 
 async function submitAnswer() {
@@ -203,10 +356,6 @@ async function submitAnswer() {
       .value
       .trim();
 
-
-  /*
-    名前チェック
-  */
 
   if (!name) {
 
@@ -220,20 +369,29 @@ async function submitAnswer() {
   }
 
 
-  /*
-    全日程回答チェック
-  */
+  if (!eventDates.length) {
+
+    showMessage(
+      "登録できる日程がありません。",
+      "error"
+    );
+
+    return;
+
+  }
+
 
   const unanswered =
-    EVENT_DATES.filter(
-      event => !answers[event.id]
+    eventDates.filter(
+      event =>
+        !answers[event.id]
     );
 
 
-  if (unanswered.length > 0) {
+  if (unanswered.length) {
 
     showMessage(
-      "すべての日程について「○」または「×」を選択してください。",
+      "すべての日程について○または×を選択してください。",
       "error"
     );
 
@@ -250,36 +408,39 @@ async function submitAnswer() {
 
   button.disabled = true;
 
-  button.querySelector("span:first-child")
-    .textContent = "登録中…";
+  button.querySelector(
+    "span:first-child"
+  ).textContent =
+    "登録中…";
 
 
   try {
 
-    const data = {
-
-      action: "save",
-
-      name: name,
-
-      answers: answers
-
-    };
-
-
     const response =
-      await fetch(API_URL, {
+      await fetch(
+        API_URL,
+        {
 
-        method: "POST",
+          method: "POST",
 
-        headers: {
-          "Content-Type":
-            "text/plain;charset=utf-8"
-        },
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
 
-        body: JSON.stringify(data)
+          body:
+            JSON.stringify({
 
-      });
+              action: "saveParticipation",
+
+              name: name,
+
+              answers: answers
+
+            })
+
+        }
+      );
 
 
     const result =
@@ -289,8 +450,7 @@ async function submitAnswer() {
     if (!result.success) {
 
       throw new Error(
-        result.message ||
-        "登録に失敗しました。"
+        result.message
       );
 
     }
@@ -302,11 +462,7 @@ async function submitAnswer() {
     );
 
 
-    /*
-      最新データを再取得
-    */
-
-    await loadParticipants();
+    await loadData();
 
 
   } catch (error) {
@@ -314,7 +470,8 @@ async function submitAnswer() {
     console.error(error);
 
     showMessage(
-      "登録に失敗しました。Apps Scriptの設定を確認してください。",
+      error.message ||
+      "登録に失敗しました。",
       "error"
     );
 
@@ -323,81 +480,22 @@ async function submitAnswer() {
 
   button.disabled = false;
 
-  button.querySelector("span:first-child")
-    .textContent = "登録する";
+  button.querySelector(
+    "span:first-child"
+  ).textContent =
+    "登録する";
 
 }
 
 
-/* ==================================================
-   ⑦ 参加者データ取得
-================================================== */
-
-async function loadParticipants() {
-
-  /*
-    Apps Script URLが未設定の場合
-  */
-
-  if (
-    !API_URL ||
-    API_URL.includes("ここにApps Script")
-  ) {
-
-    displayEmptyTable(
-      "Apps Scriptを設定すると参加状況が表示されます。"
-    );
-
-    return;
-
-  }
-
-
-  try {
-
-    const response =
-      await fetch(
-        `${API_URL}?action=get`
-      );
-
-
-    const result =
-      await response.json();
-
-
-    if (!result.success) {
-
-      throw new Error(
-        result.message ||
-        "データ取得失敗"
-      );
-
-    }
-
-
-    renderParticipants(
-      result.data || []
-    );
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    displayEmptyTable(
-      "参加状況を取得できませんでした。"
-    );
-
-  }
-
-}
-
 
 /* ==================================================
-   ⑧ 参加者一覧表示
+   参加者一覧
 ================================================== */
 
-function renderParticipants(data) {
+function renderParticipants(
+  data
+) {
 
   const header =
     document.getElementById(
@@ -410,37 +508,31 @@ function renderParticipants(data) {
     );
 
 
-  /*
-    ヘッダー
-  */
-
-  header.innerHTML = "";
-
-  const nameHeader =
-    document.createElement("th");
-
-  nameHeader.textContent =
-    "名前";
-
-  header.appendChild(nameHeader);
+  header.innerHTML = `
+    <th>名前</th>
+  `;
 
 
-  EVENT_DATES.forEach(event => {
+  eventDates.forEach(event => {
 
     const th =
       document.createElement("th");
 
-    th.textContent =
-      event.label;
+    th.innerHTML = `
+      ${escapeHtml(event.title)}
+      <br>
+      <small>
+        ${escapeHtml(formatDate(event.date))}
+      </small>
+    `;
 
     header.appendChild(th);
 
   });
 
 
-  /*
-    データなし
-  */
+  body.innerHTML = "";
+
 
   if (!data.length) {
 
@@ -449,10 +541,14 @@ function renderParticipants(data) {
       <tr>
 
         <td
-          colspan="${EVENT_DATES.length + 1}"
-          class="empty-cell"
+          colspan="${eventDates.length + 1}"
+          style="
+            text-align:center;
+            padding:30px;
+            color:#7b8799;
+          "
         >
-          まだ登録されていません
+          まだ登録されていません。
         </td>
 
       </tr>
@@ -466,46 +562,34 @@ function renderParticipants(data) {
   }
 
 
-  /*
-    表を生成
-  */
-
-  body.innerHTML = "";
-
-
   data.forEach(person => {
 
     const tr =
       document.createElement("tr");
 
 
-    /*
-      名前
-    */
-
-    const nameTd =
+    const name =
       document.createElement("td");
 
-    nameTd.className =
+    name.className =
       "name-cell";
 
-    nameTd.textContent =
-      person.name || "";
-
-    tr.appendChild(nameTd);
+    name.textContent =
+      person.name;
 
 
-    /*
-      各日程
-    */
+    tr.appendChild(name);
 
-    EVENT_DATES.forEach(event => {
+
+    eventDates.forEach(event => {
 
       const td =
         document.createElement("td");
 
+
       const value =
-        person.answers?.[event.id] || "";
+        person.answers?.[event.id] ||
+        "";
 
 
       if (value === "○") {
@@ -547,11 +631,14 @@ function renderParticipants(data) {
 }
 
 
+
 /* ==================================================
-   ⑨ 日程別人数
+   日程別人数
 ================================================== */
 
-function renderSummary(data) {
+function renderSummary(
+  data
+) {
 
   const container =
     document.getElementById(
@@ -562,21 +649,19 @@ function renderSummary(data) {
   container.innerHTML = "";
 
 
-  EVENT_DATES.forEach(event => {
+  eventDates.forEach(event => {
 
     const count =
-      data.filter(person => {
-
-        return (
+      data.filter(
+        person =>
           person.answers &&
           person.answers[event.id] === "○"
-        );
-
-      }).length;
+      ).length;
 
 
     const card =
       document.createElement("div");
+
 
     card.className =
       "summary-card";
@@ -585,12 +670,23 @@ function renderSummary(data) {
     card.innerHTML = `
 
       <div class="summary-date">
-        ${event.label}
+
+        ${escapeHtml(event.title)}
+
+        <br>
+
+        ${escapeHtml(formatDate(event.date))}
+
       </div>
 
       <div class="summary-count">
+
         ${count}
-        <span>人が参加可能</span>
+
+        <span>
+          人が参加可能
+        </span>
+
       </div>
 
     `;
@@ -603,90 +699,571 @@ function renderSummary(data) {
 }
 
 
+
 /* ==================================================
-   ⑩ データ取得失敗・未設定
+   管理者パネル
 ================================================== */
 
-function displayEmptyTable(message) {
+function openAdminPanel() {
 
-  const header =
+  const panel =
     document.getElementById(
-      "table-header"
-    );
-
-  const body =
-    document.getElementById(
-      "table-body"
+      "admin-panel"
     );
 
 
-  /*
-    ヘッダー
-  */
-
-  header.innerHTML = "";
-
-  const th =
-    document.createElement("th");
-
-  th.textContent = "名前";
-
-  header.appendChild(th);
+  panel.classList.add(
+    "active"
+  );
 
 
-  EVENT_DATES.forEach(event => {
-
-    const dateTh =
-      document.createElement("th");
-
-    dateTh.textContent =
-      event.label;
-
-    header.appendChild(dateTh);
-
+  panel.scrollIntoView({
+    behavior: "smooth"
   });
-
-
-  /*
-    本文
-  */
-
-  body.innerHTML = `
-
-    <tr>
-
-      <td
-        colspan="${EVENT_DATES.length + 1}"
-        style="
-          text-align:center;
-          padding:30px;
-          color:#7b8799;
-        "
-      >
-        ${message}
-      </td>
-
-    </tr>
-
-  `;
-
-
-  /*
-    サマリーもリセット
-  */
-
-  const summary =
-    document.getElementById(
-      "summary-list"
-    );
-
-  summary.innerHTML = "";
 
 }
 
 
+function closeAdminPanel() {
+
+  document
+    .getElementById(
+      "admin-panel"
+    )
+    .classList.remove(
+      "active"
+    );
+
+}
+
+
+
 /* ==================================================
-   ⑪ メッセージ表示
+   管理者ログイン
+================================================== */
+
+async function loginAdmin() {
+
+  const pin =
+    document
+      .getElementById(
+        "admin-pin"
+      )
+      .value
+      .trim();
+
+
+  if (!pin) {
+
+    showAdminMessage(
+      "PINを入力してください。",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        `${API_URL}?action=adminLogin&pin=${encodeURIComponent(pin)}`
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    adminPin =
+      pin;
+
+
+    document
+      .getElementById(
+        "admin-login"
+      )
+      .style.display =
+        "none";
+
+
+    document
+      .getElementById(
+        "admin-content"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+
+    loadAdminDates();
+
+
+  } catch (error) {
+
+    showAdminMessage(
+      error.message ||
+      "ログインできませんでした。",
+      "error"
+    );
+
+  }
+
+}
+
+
+
+/* ==================================================
+   管理者用日程一覧
+================================================== */
+
+function loadAdminDates() {
+
+  const container =
+    document.getElementById(
+      "admin-date-list"
+    );
+
+
+  container.innerHTML = "";
+
+
+  if (!eventDates.length) {
+
+    container.innerHTML = `
+      <div class="loading">
+        登録されている日程はありません。
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  eventDates.forEach(event => {
+
+    const item =
+      document.createElement(
+        "div"
+      );
+
+
+    item.className =
+      "admin-date-item";
+
+
+    item.innerHTML = `
+
+      <div class="admin-date-info">
+
+        <strong>
+          ${escapeHtml(event.title)}
+        </strong>
+
+        <span>
+          ${escapeHtml(formatDate(event.date))}
+        </span>
+
+      </div>
+
+
+      <div class="admin-date-actions">
+
+        <button
+          class="edit-button"
+          data-id="${event.id}"
+        >
+          ✏️ 編集
+        </button>
+
+        <button
+          class="delete-button"
+          data-id="${event.id}"
+        >
+          🗑️ 削除
+        </button>
+
+      </div>
+
+    `;
+
+
+    container.appendChild(item);
+
+  });
+
+
+  document
+    .querySelectorAll(".edit-button")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const event =
+            eventDates.find(
+              item =>
+                item.id ===
+                button.dataset.id
+            );
+
+
+          if (event) {
+
+            openDateModal(event);
+
+          }
+
+        }
+      );
+
+    });
+
+
+  document
+    .querySelectorAll(".delete-button")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () =>
+          deleteDate(
+            button.dataset.id
+          )
+      );
+
+    });
+
+}
+
+
+
+/* ==================================================
+   日程モーダル
+================================================== */
+
+function openDateModal(
+  event = null
+) {
+
+  const modal =
+    document.getElementById(
+      "date-modal"
+    );
+
+
+  const title =
+    document.getElementById(
+      "modal-title"
+    );
+
+
+  const id =
+    document.getElementById(
+      "edit-date-id"
+    );
+
+
+  const date =
+    document.getElementById(
+      "event-date"
+    );
+
+
+  const eventTitle =
+    document.getElementById(
+      "event-title"
+    );
+
+
+  if (event) {
+
+    title.textContent =
+      "日程を編集";
+
+    id.value =
+      event.id;
+
+    date.value =
+      event.date;
+
+    eventTitle.value =
+      event.title;
+
+  } else {
+
+    title.textContent =
+      "日程を追加";
+
+    id.value = "";
+
+    date.value = "";
+
+    eventTitle.value = "";
+
+  }
+
+
+  modal.classList.add(
+    "active"
+  );
+
+}
+
+
+function closeDateModal() {
+
+  document
+    .getElementById(
+      "date-modal"
+    )
+    .classList.remove(
+      "active"
+    );
+
+}
+
+
+
+/* ==================================================
+   日程保存
+================================================== */
+
+async function saveDate() {
+
+  const id =
+    document
+      .getElementById(
+        "edit-date-id"
+      )
+      .value;
+
+
+  const date =
+    document
+      .getElementById(
+        "event-date"
+      )
+      .value;
+
+
+  const title =
+    document
+      .getElementById(
+        "event-title"
+      )
+      .value
+      .trim();
+
+
+  if (!date) {
+
+    alert(
+      "日付を入力してください。"
+    );
+
+    return;
+
+  }
+
+
+  if (!title) {
+
+    alert(
+      "表示名を入力してください。"
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify({
+
+              action:
+                id
+                  ? "updateDate"
+                  : "addDate",
+
+              pin:
+                adminPin,
+
+              id: id,
+
+              date: date,
+
+              title: title
+
+            })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    closeDateModal();
+
+
+    await loadData();
+
+
+    loadAdminDates();
+
+
+  } catch (error) {
+
+    alert(
+      error.message ||
+      "保存に失敗しました。"
+    );
+
+  }
+
+}
+
+
+
+/* ==================================================
+   日程削除
+================================================== */
+
+async function deleteDate(
+  id
+) {
+
+  const event =
+    eventDates.find(
+      item =>
+        item.id === id
+    );
+
+
+  if (!event) {
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      `「${event.title}」を削除しますか？\n\nこの日程の参加回答も削除されます。`
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify({
+
+              action:
+                "deleteDate",
+
+              pin:
+                adminPin,
+
+              id:
+                id
+
+            })
+
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    await loadData();
+
+
+    loadAdminDates();
+
+
+  } catch (error) {
+
+    alert(
+      error.message ||
+      "削除に失敗しました。"
+    );
+
+  }
+
+}
+
+
+
+/* ==================================================
+   メッセージ
 ================================================== */
 
 function showMessage(
@@ -703,19 +1280,123 @@ function showMessage(
   message.textContent =
     text;
 
+
   message.className =
     `message ${type}`;
 
 
-  /*
-    数秒後に消す
-  */
+  setTimeout(
+    () => {
 
-  setTimeout(() => {
+      message.className =
+        "message";
 
-    message.className =
-      "message";
+    },
+    5000
+  );
 
-  }, 5000);
+}
+
+
+function showAdminMessage(
+  text,
+  type
+) {
+
+  const message =
+    document.getElementById(
+      "admin-message"
+    );
+
+
+  message.textContent =
+    text;
+
+
+  message.className =
+    `admin-message ${type}`;
+
+}
+
+
+
+/* ==================================================
+   日付表示
+================================================== */
+
+function formatDate(
+  dateString
+) {
+
+  if (!dateString) {
+
+    return "";
+
+  }
+
+
+  const date =
+    new Date(
+      `${dateString}T00:00:00`
+    );
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return dateString;
+
+  }
+
+
+  const weekdays = [
+    "日",
+    "月",
+    "火",
+    "水",
+    "木",
+    "金",
+    "土"
+  ];
+
+
+  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}（${weekdays[date.getDay()]}）`;
+
+}
+
+
+
+/* ==================================================
+   HTMLエスケープ
+================================================== */
+
+function escapeHtml(
+  value
+) {
+
+  return String(value || "")
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
