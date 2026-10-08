@@ -51,6 +51,84 @@
 <div class="table-wrapper"><table><thead><tr id="table-header"><th>名前</th></tr></thead><tbody id="table-body"><tr><td> 読み込んでいます…</td></tr></tbody></table></div><p class="table-note">※ ○＝参加可能　×＝参加不可</p>
 </section>
 
+<!-- 各回の参加状況 -->
+<section class="attendance-section">
+
+  <div class="section-title">
+    <span class="section-icon">📊</span>
+    <div>
+      <h2>各回の参加状況</h2>
+      <p>オーキャンごとの回答状況を確認できます。</p>
+    </div>
+  </div>
+
+  <!-- 回選択 -->
+  <div class="attendance-selector">
+    <label for="attendance-date-select">
+      確認する回
+    </label>
+
+    <select id="attendance-date-select">
+      <option value="">回を選択してください</option>
+    </select>
+  </div>
+
+  <!-- 集計 -->
+  <div id="attendance-summary" class="attendance-summary">
+    <div class="attendance-card available">
+      <span class="attendance-card-icon">🟢</span>
+      <span class="attendance-card-label">参加可能</span>
+      <strong id="attendance-yes-count">0</strong>
+      <span>人</span>
+    </div>
+
+    <div class="attendance-card unavailable">
+      <span class="attendance-card-icon">🔴</span>
+      <span class="attendance-card-label">参加不可</span>
+      <strong id="attendance-no-count">0</strong>
+      <span>人</span>
+    </div>
+
+    <div class="attendance-card unanswered">
+      <span class="attendance-card-icon">⚪</span>
+      <span class="attendance-card-label">未回答</span>
+      <strong id="attendance-unanswered-count">0</strong>
+      <span>人</span>
+    </div>
+  </div>
+
+  <!-- 参加可能 -->
+  <div class="attendance-member-box">
+    <h3>🟢 参加可能なメンバー</h3>
+    <div id="attendance-yes-list" class="attendance-member-list">
+      <p class="attendance-empty">
+        回を選択してください。
+      </p>
+    </div>
+  </div>
+
+  <!-- 参加不可 -->
+  <div class="attendance-member-box">
+    <h3>🔴 参加不可のメンバー</h3>
+    <div id="attendance-no-list" class="attendance-member-list">
+      <p class="attendance-empty">
+        回を選択してください。
+      </p>
+    </div>
+  </div>
+
+  <!-- 未回答 -->
+  <div class="attendance-member-box">
+    <h3>⚪ 未回答のメンバー</h3>
+    <div id="attendance-unanswered-list" class="attendance-member-list">
+      <p class="attendance-empty">
+        回を選択してください。
+      </p>
+    </div>
+  </div>
+
+</section>
+       
 <!-- =========================
          ADMIN
 ========================== -->
