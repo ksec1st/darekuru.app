@@ -1190,3 +1190,133 @@ th:first-child {
   }
 
 }
+
+/* ========================================
+   各回の参加状況
+======================================== */
+
+.attendance-section {
+  margin-top: 50px;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.attendance-selector {
+  margin-top: 25px;
+}
+
+.attendance-selector label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+#attendance-date-select {
+  width: 100%;
+  max-width: 500px;
+  padding: 14px 16px;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* 集計カード */
+
+.attendance-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.attendance-card {
+  padding: 22px;
+  border-radius: 15px;
+  text-align: center;
+  background: #f7f7f7;
+}
+
+.attendance-card-icon {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.attendance-card-label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.attendance-card strong {
+  font-size: 32px;
+  line-height: 1;
+}
+
+/* メンバー一覧 */
+
+.attendance-member-box {
+  margin-top: 25px;
+  padding: 22px;
+  border-radius: 15px;
+  background: #f8f9fb;
+}
+
+.attendance-member-box h3 {
+  margin: 0 0 15px;
+  font-size: 18px;
+}
+
+.attendance-member-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.attendance-member {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.attendance-empty {
+  margin: 0;
+  color: #888;
+  font-size: 14px;
+}
+
+/* スマホ */
+
+@media (max-width: 700px) {
+
+  .attendance-section {
+    padding: 20px;
+  }
+
+  .attendance-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .attendance-card {
+    padding: 18px;
+  }
+
+  .attendance-card strong {
+    font-size: 28px;
+  }
+
+  .attendance-member-box {
+    padding: 18px;
+  }
+
+}
