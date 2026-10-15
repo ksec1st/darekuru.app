@@ -1,5 +1,7 @@
+
 /**************************************************
- * KSOC参加確認｜KSEC 1st
+ * だれくる｜KSEC 1st
+ * script.js
  **************************************************/
 
 const API_URL =
@@ -21,37 +23,31 @@ document.addEventListener("DOMContentLoaded", () => {
    イベント設定
 ================================================== */
 
+function onClickIfExists(id, callback) {
+  const element = document.getElementById(id);
+  if (element) element.addEventListener("click", callback);
+}
+
 function setupEvents() {
-  document.getElementById("submit-button")
-    .addEventListener("click", submitAnswer);
+  onClickIfExists("submit-button", submitAnswer);
+  onClickIfExists("admin-open-button", openAdminPanel);
+  onClickIfExists("admin-close-button", closeAdminPanel);
+  onClickIfExists("admin-login-button", loginAdmin);
+  onClickIfExists("add-date-button", () => openDateModal());
+  onClickIfExists("modal-close-button", closeDateModal);
+  onClickIfExists("modal-cancel-button", closeDateModal);
+  onClickIfExists("modal-save-button", saveDate);
+  onClickIfExists("add-member-button", addMemberFromForm);
 
-  document.getElementById("admin-open-button")
-    .addEventListener("click", openAdminPanel);
+  const attendanceSelect =
+    document.getElementById("attendance-date-select");
 
-  document.getElementById("admin-close-button")
-    .addEventListener("click", closeAdminPanel);
-
-  document.getElementById("admin-login-button")
-    .addEventListener("click", loginAdmin);
-
-  document.getElementById("add-date-button")
-    .addEventListener("click", () => openDateModal());
-
-  document.getElementById("modal-close-button")
-    .addEventListener("click", closeDateModal);
-
-  document.getElementById("modal-cancel-button")
-    .addEventListener("click", closeDateModal);
-
-  document.getElementById("modal-save-button")
-    .addEventListener("click", saveDate);
-
-  // HTMLにある生徒追加ボタンに接続
-  document.getElementById("add-member-button")
-    .addEventListener("click", addMemberFromForm);
-
-  document.getElementById("attendance-date-select")
-    .addEventListener("change", updateAttendanceView);
+  if (attendanceSelect) {
+    attendanceSelect.addEventListener(
+      "change",
+      updateAttendanceView
+    );
+  }
 }
 
 /* ==================================================
@@ -69,7 +65,9 @@ async function apiGet(params = {}) {
   const result = await response.json();
 
   if (!result.success) {
-    throw new Error(result.message || "データ取得に失敗しました。");
+    throw new Error(
+      result.message || "データ取得に失敗しました。"
+    );
   }
 
   return result;
@@ -87,7 +85,9 @@ async function apiPost(data) {
   const result = await response.json();
 
   if (!result.success) {
-    throw new Error(result.message || "処理に失敗しました。");
+    throw new Error(
+      result.message || "処理に失敗しました。"
+    );
   }
 
   return result;
@@ -107,7 +107,11 @@ async function loadData() {
 
     renderMemberSelect();
     renderDateList();
+
+    // 一覧表を削除していてもエラーにならない
     renderParticipants();
+
+    // 集計表示は引き続き行う
     renderSummary();
     loadAttendanceDates();
 
@@ -132,8 +136,9 @@ async function loadData() {
 
 function renderMemberSelect() {
   const select = document.getElementById("name");
-  const previousValue = select.value;
+  if (!select) return;
 
+  const previousValue = select.value;
   select.innerHTML = "";
 
   const placeholder = document.createElement("option");
@@ -155,7 +160,8 @@ function renderMemberSelect() {
   select.disabled = members.length === 0;
 
   if (!members.length) {
-    placeholder.textContent = "登録されているメンバーがいません";
+    placeholder.textContent =
+      "登録されているメンバーがいません";
   }
 }
 
@@ -165,6 +171,8 @@ function renderMemberSelect() {
 
 function renderDateList() {
   const container = document.getElementById("date-list");
+  if (!container) return;
+
   container.innerHTML = "";
 
   if (!eventDates.length) {
@@ -209,19 +217,18 @@ function renderDateList() {
         </div>
 
         <div class="attendance-time-area">
-          <label for="time-${escapeHtml(event.id)}">参加できる時間</label>
+          <label for="time-${escapeHtml(event.id)}">
+            参加できる時間
+          </label>
+
           <select
             id="time-${escapeHtml(event.id)}"
             class="attendance-time-select"
             data-date="${escapeHtml(event.id)}"
           >
-            <option value="終日"
-              ${
-                selectedTime === "終日"
-                  ? "selected"
-                  : ""
-              }>
-              終日
+            <option value="オール（午前午後両方）"
+              ${selectedTime === "オール（午前午後両方）" ? "selected" : ""}>
+              オール（午前午後両方）
             </option>
 
             <option value="午前まで"
@@ -250,7 +257,6 @@ function renderDateList() {
 
       container.querySelectorAll(".choice-button").forEach(btn => {
         if (btn.dataset.date !== dateId) return;
-
         btn.classList.remove("selected-yes", "selected-no");
       });
 
@@ -263,20 +269,20 @@ function renderDateList() {
 
 function eventTimeFromAnswer(answer) {
   if (typeof answer !== "string" || !answer.startsWith("○|")) {
-    return "終日";
+    return "オール（午前午後両方）";
   }
 
   const time = answer.slice(2);
 
   const allowed = [
-    "終日",
+    "オール（午前午後両方）",
     "午前まで",
     "午後から"
   ];
 
   return allowed.includes(time)
     ? time
-    : "終日";
+    : "オール（午前午後両方）";
 }
 
 /* ==================================================
@@ -284,7 +290,10 @@ function eventTimeFromAnswer(answer) {
 ================================================== */
 
 async function submitAnswer() {
-  const name = document.getElementById("name").value;
+  const nameElement = document.getElementById("name");
+  if (!nameElement) return;
+
+  const name = nameElement.value;
 
   if (!name) {
     showMessage("名前を選択してください。", "error");
@@ -310,7 +319,7 @@ async function submitAnswer() {
 
       const time = timeSelect
         ? timeSelect.value
-        : "終日";
+        : "オール（午前午後両方）";
 
       selectedAnswers[event.id] = `○|${time}`;
     }
@@ -325,13 +334,12 @@ async function submitAnswer() {
   }
 
   const button = document.getElementById("submit-button");
-  const label = button.querySelector("span:first-child");
+  if (!button) return;
 
+  const label = button.querySelector("span:first-child");
   button.disabled = true;
 
-  if (label) {
-    label.textContent = "登録中…";
-  }
+  if (label) label.textContent = "登録中…";
 
   try {
     await apiPost({
@@ -342,36 +350,36 @@ async function submitAnswer() {
 
     showMessage("参加状況を登録しました！", "success");
 
-    // 登録後に選択状態をリセット
     answers = {};
-
     await loadData();
 
-    // 選択した名前は維持
-    document.getElementById("name").value = name;
+    const select = document.getElementById("name");
+    if (select) select.value = name;
   } catch (error) {
     console.error(error);
-
     showMessage(
       error.message || "登録に失敗しました。",
       "error"
     );
   } finally {
     button.disabled = false;
-
-    if (label) {
-      label.textContent = "登録する";
-    }
+    if (label) label.textContent = "登録する";
   }
 }
 
 /* ==================================================
-   回答一覧テーブル
+   参加者一覧テーブル
+   ★ HTMLから削除済みの場合は何もしない
 ================================================== */
 
 function renderParticipants() {
   const header = document.getElementById("table-header");
   const body = document.getElementById("table-body");
+
+  // 一覧表がHTMLにない場合は描画をスキップ
+  if (!header || !body) {
+    return;
+  }
 
   header.innerHTML = "<th>名前</th>";
 
@@ -416,7 +424,6 @@ function renderParticipants() {
         td.textContent = value.startsWith("○|")
           ? `○（${value.slice(2)}）`
           : "○";
-
         td.className = "answer-yes";
       } else if (value === "×") {
         td.textContent = "×";
@@ -434,11 +441,13 @@ function renderParticipants() {
 }
 
 /* ==================================================
-   日程ごとの参加人数
+   日程ごとの参加人数集計
 ================================================== */
 
 function renderSummary() {
   const container = document.getElementById("summary-list");
+  if (!container) return;
+
   container.innerHTML = "";
 
   if (!eventDates.length) {
@@ -450,7 +459,6 @@ function renderSummary() {
   eventDates.forEach(event => {
     const count = participantsData.filter(person => {
       const value = person.answers?.[event.id] || "";
-
       return value === "○" || value.startsWith("○|");
     }).length;
 
@@ -479,6 +487,8 @@ function renderSummary() {
 
 function loadAttendanceDates() {
   const select = document.getElementById("attendance-date-select");
+  if (!select) return;
+
   const previousValue = select.value;
 
   select.innerHTML =
@@ -501,8 +511,10 @@ function loadAttendanceDates() {
 }
 
 function updateAttendanceView() {
-  const dateId =
-    document.getElementById("attendance-date-select").value;
+  const select = document.getElementById("attendance-date-select");
+  if (!select) return;
+
+  const dateId = select.value;
 
   const yes = [];
   const no = [];
@@ -513,21 +525,13 @@ function updateAttendanceView() {
     setAttendanceCounts(0, 0, 0);
 
     renderAttendanceMembers(
-      "attendance-yes-list",
-      [],
-      "回を選択してください。"
+      "attendance-yes-list", [], "回を選択してください。"
     );
-
     renderAttendanceMembers(
-      "attendance-no-list",
-      [],
-      "回を選択してください。"
+      "attendance-no-list", [], "回を選択してください。"
     );
-
     renderAttendanceMembers(
-      "attendance-unanswered-list",
-      [],
-      "回を選択してください。"
+      "attendance-unanswered-list", [], "回を選択してください。"
     );
 
     return;
@@ -542,7 +546,7 @@ function updateAttendanceView() {
         name: person.name,
         time: value.startsWith("○|")
           ? value.slice(2)
-          : "終日"
+          : "オール（午前午後両方）"
       });
     } else if (value === "×") {
       no.push(person.name);
@@ -584,21 +588,26 @@ function updateAttendanceView() {
 }
 
 function setAttendanceCounts(yes, no, unanswered) {
-  document.getElementById("attendance-yes-count").textContent = yes;
-  document.getElementById("attendance-no-count").textContent = no;
-  document.getElementById("attendance-unanswered-count").textContent =
-    unanswered;
+  const yesCount = document.getElementById("attendance-yes-count");
+  const noCount = document.getElementById("attendance-no-count");
+  const unansweredCount =
+    document.getElementById("attendance-unanswered-count");
+
+  if (yesCount) yesCount.textContent = yes;
+  if (noCount) noCount.textContent = no;
+  if (unansweredCount) unansweredCount.textContent = unanswered;
 }
 
 function renderAttendanceMembers(elementId, list, emptyMessage) {
   const container = document.getElementById(elementId);
+  if (!container) return;
+
   container.innerHTML = "";
 
   if (!list.length) {
     const empty = document.createElement("p");
     empty.className = "attendance-empty";
     empty.textContent = emptyMessage;
-
     container.appendChild(empty);
     return;
   }
@@ -630,6 +639,7 @@ function renderAttendanceMembers(elementId, list, emptyMessage) {
 
 function openAdminPanel() {
   const panel = document.getElementById("admin-panel");
+  if (!panel) return;
 
   panel.classList.add("active");
   panel.scrollIntoView({
@@ -639,12 +649,15 @@ function openAdminPanel() {
 }
 
 function closeAdminPanel() {
-  document.getElementById("admin-panel")
-    .classList.remove("active");
+  const panel = document.getElementById("admin-panel");
+  if (panel) panel.classList.remove("active");
 }
 
 async function loginAdmin() {
-  const pin = document.getElementById("admin-pin").value.trim();
+  const pinInput = document.getElementById("admin-pin");
+  if (!pinInput) return;
+
+  const pin = pinInput.value.trim();
 
   if (!pin) {
     showAdminMessage("PINを入力してください。", "error");
@@ -659,11 +672,11 @@ async function loginAdmin() {
 
     adminPin = pin;
 
-    document.getElementById("admin-login")
-      .classList.add("hidden");
+    const login = document.getElementById("admin-login");
+    const content = document.getElementById("admin-content");
 
-    document.getElementById("admin-content")
-      .classList.remove("hidden");
+    if (login) login.classList.add("hidden");
+    if (content) content.classList.remove("hidden");
 
     showAdminMessage("ログインしました。", "success");
 
@@ -683,6 +696,8 @@ async function loginAdmin() {
 
 function renderAdminDates() {
   const container = document.getElementById("admin-date-list");
+  if (!container) return;
+
   container.innerHTML = "";
 
   if (!eventDates.length) {
@@ -713,14 +728,12 @@ function renderAdminDates() {
     edit.type = "button";
     edit.className = "edit-button";
     edit.textContent = "✏️ 編集";
-
     edit.addEventListener("click", () => openDateModal(event));
 
     const del = document.createElement("button");
     del.type = "button";
     del.className = "delete-button";
     del.textContent = "🗑️ 削除";
-
     del.addEventListener("click", () => deleteDate(event.id));
 
     actions.append(edit, del);
@@ -730,31 +743,35 @@ function renderAdminDates() {
 }
 
 function openDateModal(event = null) {
-  document.getElementById("modal-title").textContent =
-    event ? "日程を編集" : "日程を追加";
+  const modal = document.getElementById("date-modal");
+  if (!modal) return;
 
-  document.getElementById("edit-date-id").value =
-    event?.id || "";
+  const modalTitle = document.getElementById("modal-title");
+  const idInput = document.getElementById("edit-date-id");
+  const dateInput = document.getElementById("event-date");
+  const titleInput = document.getElementById("event-title");
 
-  document.getElementById("event-date").value =
-    event?.date || "";
+  if (modalTitle) {
+    modalTitle.textContent = event ? "日程を編集" : "日程を追加";
+  }
 
-  document.getElementById("event-title").value =
-    event?.title || "";
+  if (idInput) idInput.value = event?.id || "";
+  if (dateInput) dateInput.value = event?.date || "";
+  if (titleInput) titleInput.value = event?.title || "";
 
-  document.getElementById("date-modal")
-    .classList.add("active");
+  modal.classList.add("active");
 }
 
 function closeDateModal() {
-  document.getElementById("date-modal")
-    .classList.remove("active");
+  const modal = document.getElementById("date-modal");
+  if (modal) modal.classList.remove("active");
 }
 
 async function saveDate() {
-  const id = document.getElementById("edit-date-id").value;
-  const date = document.getElementById("event-date").value;
-  const title = document.getElementById("event-title").value.trim();
+  const id = document.getElementById("edit-date-id")?.value || "";
+  const date = document.getElementById("event-date")?.value || "";
+  const title =
+    document.getElementById("event-title")?.value.trim() || "";
 
   if (!date || !title) {
     alert("日程名と開催日を入力してください。");
@@ -781,7 +798,6 @@ async function saveDate() {
 
 async function deleteDate(id) {
   const event = eventDates.find(item => item.id === id);
-
   if (!event) return;
 
   if (!confirm(
@@ -798,7 +814,6 @@ async function deleteDate(id) {
     });
 
     await loadData();
-
     showAdminMessage("日程を削除しました。", "success");
   } catch (error) {
     alert(error.message || "日程を削除できませんでした。");
@@ -809,9 +824,10 @@ async function deleteDate(id) {
    管理者：メンバー管理
 ================================================== */
 
-// 現在のHTMLの入力欄 new-member-name に対応
 async function addMemberFromForm() {
   const input = document.getElementById("new-member-name");
+  if (!input) return;
+
   const name = input.value.trim();
 
   if (!name) {
@@ -827,7 +843,6 @@ async function addMemberFromForm() {
     });
 
     input.value = "";
-
     await loadData();
 
     showAdminMessage("メンバーを追加しました。", "success");
@@ -838,6 +853,8 @@ async function addMemberFromForm() {
 
 function renderAdminMembers() {
   const container = document.getElementById("admin-member-list");
+  if (!container) return;
+
   container.innerHTML = "";
 
   if (!members.length) {
@@ -860,14 +877,12 @@ function renderAdminMembers() {
     edit.type = "button";
     edit.className = "edit-button";
     edit.textContent = "✏️ 名前を変更";
-
     edit.addEventListener("click", () => editMember(name));
 
     const del = document.createElement("button");
     del.type = "button";
     del.className = "delete-button";
     del.textContent = "🗑️ 削除";
-
     del.addEventListener("click", () => deleteMember(name));
 
     actions.append(edit, del);
@@ -902,7 +917,6 @@ async function editMember(oldName) {
     });
 
     await loadData();
-
     showAdminMessage("メンバー名を変更しました。", "success");
   } catch (error) {
     alert(error.message || "メンバー名を変更できませんでした。");
@@ -924,7 +938,6 @@ async function deleteMember(name) {
     });
 
     await loadData();
-
     showAdminMessage("メンバーを削除しました。", "success");
   } catch (error) {
     alert(error.message || "メンバーを削除できませんでした。");
@@ -932,18 +945,17 @@ async function deleteMember(name) {
 }
 
 /* ==================================================
-   メッセージ・表示用共通関数
+   メッセージ表示
 ================================================== */
 
 function showMessage(text, type) {
   const message = document.getElementById("message");
+  if (!message) return;
 
   message.textContent = text;
   message.className = `message ${type}`;
 
-  if (messageTimer) {
-    clearTimeout(messageTimer);
-  }
+  if (messageTimer) clearTimeout(messageTimer);
 
   messageTimer = setTimeout(() => {
     message.className = "message";
@@ -952,10 +964,15 @@ function showMessage(text, type) {
 
 function showAdminMessage(text, type) {
   const message = document.getElementById("admin-message");
+  if (!message) return;
 
   message.textContent = text;
   message.className = `admin-message ${type}`;
 }
+
+/* ==================================================
+   共通関数
+================================================== */
 
 function formatDate(dateString) {
   if (!dateString) return "";
