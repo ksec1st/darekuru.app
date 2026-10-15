@@ -12,225 +12,78 @@
 
 <!-- HEADER -->
 <header class="header">
-  <div class="header-inner">
-    <div class="brand">
-      <div class="brand-icon">🎓</div>
-      <div>
-        <p class="brand-sub">TeamING / KSV</p>
-        <h1>だ れ く る</h1>
-      </div>
-    </div>
-    <button id="admin-open-button" class="admin-button">🔐 管理者</button>
-  </div>
+<div class="header-inner"><div class="brand"><div class="brand-icon">🎓</div><div><p class="brand-sub">TeamING / KSV</p><h1>だ れ く る</h1></div></div>
+<button id="admin-open-button" class="admin-button">🔐 管理者</button></div>
 </header>
 
 <!-- MAIN -->
 <main class="container">
+<!-- HERO -->
+<section class="hero">
+<span class="hero-label">OPEN CAMPUS STAFF</span><h2><span>KSOC参加確認</span></h2><p>自分が参加できる日程を選択してください。<br>登録された参加状況は、みんなで確認できます。</p>
+</section>
+<!-- PARTICIPATION -->
+<section class="card">
+<div class="section-title">
+<div class="section-number">01</div><div><span>REGISTER</span><h3>参加可能日を登録</h3></div></div>
+<!-- NAME -->
+<div class="form-group">
+<label for="name">名前<span class="required">必須</span></label><select id="name" class="name-select"><option value="">名前を選択してください</option></select></div>
+<!-- DATE -->
+<div class="form-group"><label>参加可能日<span class="required">必須</span></label><p class="form-description">参加できる日は「○」、参加できない日は「×」を選択してください。</p><div id="date-list" class="date-list">
+<div class="loading">日程を読み込んでいます…</div></div></div><button id="submit-button" class="submit-button" type="button"><span>登録する</span><span class="button-arrow"> →</span></button>
+<div id="message" class="message"></div></section>
+<!-- INFO -->
+<section class="info-card">
+<div class="info-icon">ℹ️</div><div><h3>登録について</h3><p>同じ名前で再度登録すると、以前の回答が最新の内容に更新されます。</p></div>
+</section>
+<!-- PARTICIPANTS -->
+<section class="card">
+<div class="section-title"><div class="section-number">02</div><div><span>PARTICIPANTS</span><h3>参加状況</h3></div></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <span class="hero-label">OPEN CAMPUS STAFF</span>
-    <h2><span>KSOC参加確認</span></h2>
-    <p>
-      自分が参加できる日程を選択してください。<br>
-      登録された参加状況は、みんなで確認できます。
-    </p>
-  </section>
+<!-- SUMMARY -->
+<div id="summary-list" class="summary-list"><div class="loading">読み込んでいます…</div></div>
+<!-- TABLE -->
+<div class="table-wrapper">
+<table><thead><tr id="table-header"><th>名前</th></tr></thead><tbody id="table-body"><tr><td>読み込んでいます…</td></tr></tbody></table></div><p class="table-note">※ ○＝参加可能　×＝参加不可</p>
+</section>
 
-  <!-- PARTICIPATION -->
-  <section class="card">
-    <div class="section-title">
-      <div class="section-number">01</div>
-      <div>
-        <span>REGISTER</span>
-        <h3>参加可能日を登録</h3>
-      </div>
-    </div>
-
-    <!-- NAME -->
-    <div class="form-group">
-      <label for="name">名前<span class="required">必須</span></label>
-      <select id="name" class="name-select">
-        <option value="">名前を選択してください</option>
-      </select>
-    </div>
-
-    <!-- DATE -->
-    <div class="form-group">
-      <label>参加可能日<span class="required">必須</span></label>
-      <p class="form-description">
-        参加できる日は「○」、参加できない日は「×」を選択してください。
-      </p>
-      <div id="date-list" class="date-list">
-        <div class="loading">日程を読み込んでいます…</div>
-      </div>
-    </div>
-
-    <button id="submit-button" class="submit-button" type="button">
-      <span>登録する</span>
-      <span class="button-arrow"> →</span>
-    </button>
-    <div id="message" class="message"></div>
-  </section>
-
-  <!-- INFO -->
-  <section class="info-card">
-    <div class="info-icon">ℹ️</div>
-    <div>
-      <h3>登録について</h3>
-      <p>同じ名前で再度登録すると、以前の回答が最新の内容に更新されます。</p>
-    </div>
-  </section>
-
-  <!-- PARTICIPANTS -->
-  <section class="card">
-    <div class="section-title">
-      <div class="section-number">02</div>
-      <div>
-        <span>PARTICIPANTS</span>
-        <h3>参加状況</h3>
-      </div>
-    </div>
-
-    <!-- SUMMARY -->
-    <div id="summary-list" class="summary-list">
-      <div class="loading">読み込んでいます…</div>
-    </div>
-
-    <!-- TABLE -->
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr id="table-header">
-            <th>名前</th>
-          </tr>
-        </thead>
-        <tbody id="table-body">
-          <tr>
-            <td>読み込んでいます…</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="table-note">※ ○＝参加可能　×＝参加不可</p>
-  </section>
-
-  <!-- 各回の参加状況 -->
-  <section class="attendance-section">
-    <div class="section-title">
-      <span class="section-icon">📊</span>
-      <div>
-        <h2>各回の参加状況</h2>
-        <p>各回の回答状況を確認できます。</p>
-      </div>
-    </div>
-
-    <!-- 回選択 -->
-    <div class="attendance-selector">
-      <label for="attendance-date-select">確認する回</label>
-      <select id="attendance-date-select">
-        <option value="">回を選択してください</option>
-      </select>
-    </div>
-
-    <!-- 集計 -->
-    <div id="attendance-summary" class="attendance-summary">
-      <div class="attendance-card available">
-        <span class="attendance-card-icon">🟢</span>
-        <span class="attendance-card-label">参加可能</span>
-        <strong id="attendance-yes-count">0</strong>
-        <span>人</span>
-      </div>
-
-      <div class="attendance-card unavailable">
-        <span class="attendance-card-icon">🔴</span>
-        <span class="attendance-card-label">参加不可</span>
-        <strong id="attendance-no-count">0</strong>
-        <span>人</span>
-      </div>
-
-      <div class="attendance-card unanswered">
-        <span class="attendance-card-icon">⚪</span>
-        <span class="attendance-card-label">未回答</span>
-        <strong id="attendance-unanswered-count">0</strong>
-        <span>人</span>
-      </div>
-    </div>
-
-    <!-- 参加可能 -->
-    <div class="attendance-member-box">
-      <h3>🟢 参加可能なメンバー</h3>
-      <div id="attendance-yes-list" class="attendance-member-list">
-        <p class="attendance-empty">回を選択してください。</p>
-      </div>
-    </div>
-
-    <!-- 参加不可 -->
-    <div class="attendance-member-box">
-      <h3>🔴 参加不可のメンバー</h3>
-      <div id="attendance-no-list" class="attendance-member-list">
-        <p class="attendance-empty">回を選択してください。</p>
-      </div>
-    </div>
-
-    <!-- 未回答 -->
-    <div class="attendance-member-box">
-      <h3>⚪ 未回答のメンバー</h3>
-      <div id="attendance-unanswered-list" class="attendance-member-list">
-        <p class="attendance-empty">回を選択してください。</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ADMIN -->
-  <section id="admin-panel" class="admin-panel">
-    <div class="admin-panel-header">
-      <div>
-        <span>ADMINISTRATION</span>
-        <h2>日程管理</h2>
-      </div>
-      <button id="admin-close-button" class="close-button">×</button>
-    </div>
-
-    <!-- LOGIN -->
-    <div id="admin-login" class="admin-login">
-      <p>管理者PINを入力してください。</p>
-      <div class="admin-login-row">
-        <input type="password" id="admin-pin" placeholder="管理者PIN">
-        <button id="admin-login-button" class="primary-small-button">ログイン</button>
-      </div>
-      <div id="admin-message" class="admin-message"></div>
-    </div>
-
-    <!-- ADMIN CONTENT -->
-    <div id="admin-content" class="admin-content hidden">
-
-      <!-- DATE MANAGEMENT -->
-      <div class="admin-toolbar admin-toolbar-date">
-        <div>
-          <strong>📅 オーキャン日程</strong>
-          <p>日程の追加・変更・削除ができます。</p>
-        </div>
-        <button id="add-date-button" class="primary-button">＋ 日程を追加</button>
-      </div>
-      <div id="admin-date-list" class="admin-date-list"></div>
-
-      <!-- MEMBER MANAGEMENT -->
-      <div class="admin-toolbar">
-        <div>
-          <strong>👥 生徒管理</strong>
-          <p>参加者として登録するメンバーを管理できます。</p>
-        </div>
-      </div>
-
-      <div class="member-add-area">
-        <input type="text" id="new-member-name" placeholder="生徒氏名を入力">
-        <button id="add-member-button" class="primary-button">＋ 生徒を追加</button>
-      </div>
-      <div id="admin-member-list" class="admin-member-list"></div>
-
-    </div>
-  </section>
+<!-- 各回の参加状況 -->
+<section class="attendance-section">
+<div class="section-title"><span class="section-icon">📊</span><div><h2>各回の参加状況</h2><p>各回の回答状況を確認できます。</p></div></div>
+<!-- 回選択 -->
+<div class="attendance-selector">
+<label for="attendance-date-select">確認する回</label>
+<select id="attendance-date-select"><option value="">回を選択してください</option></select></div>
+<!-- 集計 -->
+<div id="attendance-summary" class="attendance-summary"><div class="attendance-card available"><span class="attendance-card-icon">🟢</span><span class="attendance-card-label">参加可能</span>
+<strong id="attendance-yes-count">0</strong><span></span></div>
+<div class="attendance-card unavailable"><span class="attendance-card-icon">🔴</span><span class="attendance-card-label">参加不可</span><strong id="attendance-no-count">0</strong><span></span></div>
+<div class="attendance-card unanswered">
+<span class="attendance-card-icon">⚪</span><span class="attendance-card-label">未回答</span><strong id="attendance-unanswered-count">0</strong><span></span></div></div>
+<!-- 参加可能 -->
+<div class="attendance-member-box"><h3>🟢 参加可能なメンバー</h3><div id="attendance-yes-list" class="attendance-member-list"><p class="attendance-empty">回を選択してください。</p></div></div>
+<!-- 参加不可 -->
+<div class="attendance-member-box"><h3>🔴 参加不可のメンバー</h3><div id="attendance-no-list" class="attendance-member-list"><p class="attendance-empty">回を選択してください。</p></div></div>
+<!-- 未回答 -->
+<div class="attendance-member-box"><h3>⚪ 未回答のメンバー</h3><div id="attendance-unanswered-list" class="attendance-member-list"><p class="attendance-empty">回を選択してください。</p></div></div>
+</section>
+<!-- ADMIN -->
+<section id="admin-panel" class="admin-panel">
+<div class="admin-panel-header"><div><span>ADMINISTRATION</span><h2>日程管理</h2></div><button id="admin-close-button" class="close-button">×</button></div>
+<!-- LOGIN -->
+<div id="admin-login" class="admin-login"><p>管理者PINを入力してください。</p><div class="admin-login-row"><input type="password" id="admin-pin" placeholder="管理者PIN">
+<button id="admin-login-button" class="primary-small-button">ログイン</button></div><div id="admin-message" class="admin-message"></div></div>
+<!-- ADMIN CONTENT -->
+<div id="admin-content" class="admin-content hidden">
+<!-- DATE MANAGEMENT -->
+<div class="admin-toolbar admin-toolbar-date">
+<div><strong>📅 オーキャン日程</strong><p>日程の追加・変更・削除ができます。</p></div><button id="add-date-button" class="primary-button">＋ 日程を追加</button></div><div id="admin-date-list" class="admin-date-list"></div>
+<!-- MEMBER MANAGEMENT -->
+<div class="admin-toolbar">
+<div><strong>👥 生徒管理</strong><p>参加者として登録するメンバーを管理できます。</p></div></div>
+<div class="member-add-area"><input type="text" id="new-member-name" placeholder="生徒氏名を入力"><button id="add-member-button" class="primary-button">＋ 生徒を追加</button></div><div id="admin-member-list" class="admin-member-list"></div>
+</div></section>
 
 </main>
 
