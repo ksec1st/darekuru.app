@@ -1155,3 +1155,173 @@ footer { padding: 20px 0 35px; color: var(--muted); text-align: center; font-siz
     padding: 20px;
   }
 }
+
+
+/* ========================================
+   日程選択をカード形式に変更
+======================================== */
+
+#date-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 0;
+}
+
+/* 日程カード */
+#date-list .date-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid #dce6f3;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 5px 18px rgba(25, 55, 90, 0.06);
+  transition: transform .2s ease, box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+#date-list .date-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 4px;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(90deg, var(--navy), #65a7ef);
+}
+
+#date-list .date-item:hover {
+  transform: translateY(-3px);
+  border-color: #b8d1f0;
+  box-shadow: 0 12px 26px rgba(25, 55, 90, 0.1);
+}
+
+/* 日程名・日付 */
+#date-list .date-name {
+  display: block;
+  color: var(--navy);
+  font-size: 16px;
+  font-weight: 850;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+#date-list .date-name small {
+  display: inline-block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* 回答ボタン */
+#date-list .date-answer-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+
+#date-list .date-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+#date-list .choice-button {
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 6px;
+  border: 1px solid #d7e1ee;
+  border-radius: 11px;
+  background: #fff;
+  color: #53657b;
+  font-size: 13px;
+  font-weight: 800;
+  transition: background .18s ease, border-color .18s ease,
+    transform .18s ease;
+}
+
+#date-list .choice-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--blue);
+}
+
+#date-list .choice-button.selected-yes {
+  border-color: #42a879;
+  background: #e8f7ef;
+  color: #087449;
+  box-shadow: inset 0 0 0 1px rgba(66, 168, 121, .12);
+}
+
+#date-list .choice-button.selected-no {
+  border-color: #df8791;
+  background: #fff0f0;
+  color: #b72e3b;
+  box-shadow: inset 0 0 0 1px rgba(195, 61, 75, .08);
+}
+
+/* 午前・午後などの選択 */
+#date-list .attendance-time-area {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid #dce8f7;
+  border-radius: 11px;
+  background: #f1f6fd;
+}
+
+#date-list .attendance-time-area label {
+  margin: 0;
+  color: #53657b;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#date-list .attendance-time-select {
+  width: 100%;
+  min-height: 43px;
+  border-color: #d2deee;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 13px;
+}
+
+/* 読み込み表示 */
+#date-list > .loading {
+  grid-column: 1 / -1;
+  padding: 25px 16px;
+  border: 1px dashed #cbd9eb;
+  border-radius: 13px;
+  background: #f8fbff;
+  text-align: center;
+}
+
+/* スマホは1列 */
+@media (max-width: 650px) {
+  #date-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 13px;
+  }
+
+  #date-list .date-item {
+    gap: 15px;
+    padding: 20px 17px;
+  }
+
+  #date-list .date-name {
+    font-size: 15px;
+  }
+
+  #date-list .choice-button {
+    min-height: 48px;
+    font-size: 14px;
+  }
+}
