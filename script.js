@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
   loadData();
 });
 
+/* ==================================================
+   イベント設定
+================================================== */
+
 function setupEvents() {
   document.getElementById("submit-button")
     .addEventListener("click", submitAnswer);
@@ -43,8 +47,9 @@ function setupEvents() {
   document.getElementById("modal-save-button")
     .addEventListener("click", saveDate);
 
-  document.getElementById("member-form")
-    .addEventListener("submit", addMemberFromForm);
+  // HTMLにある生徒追加ボタンに接続
+  document.getElementById("add-member-button")
+    .addEventListener("click", addMemberFromForm);
 
   document.getElementById("attendance-date-select")
     .addEventListener("change", updateAttendanceView);
@@ -56,6 +61,7 @@ function setupEvents() {
 
 async function apiGet(params = {}) {
   const url = new URL(API_URL);
+
   Object.entries(params).forEach(([key, value]) => {
     url.searchParams.set(key, value);
   });
@@ -88,6 +94,10 @@ async function apiPost(data) {
   return result;
 }
 
+/* ==================================================
+   データ読み込み
+================================================== */
+
 async function loadData() {
   try {
     const result = await apiGet({ action: "getAll" });
@@ -108,8 +118,10 @@ async function loadData() {
     }
   } catch (error) {
     console.error(error);
+
     showMessage(
-      error.message || "データを取得できませんでした。Apps ScriptのURLやデプロイ設定を確認してください。",
+      error.message ||
+      "データを取得できませんでした。Apps ScriptのURLやデプロイ設定を確認してください。",
       "error"
     );
   }
@@ -180,14 +192,18 @@ function renderDateList() {
         <div class="date-options">
           <button
             type="button"
-            class="choice-button ${currentAnswer.startsWith("○") ? "selected-yes" : ""}"
+            class="choice-button ${
+              currentAnswer.startsWith("○") ? "selected-yes" : ""
+            }"
             data-date="${escapeHtml(event.id)}"
             data-value="○"
           >○ 参加できる</button>
 
           <button
             type="button"
-            class="choice-button ${currentAnswer === "×" ? "selected-no" : ""}"
+            class="choice-button ${
+              currentAnswer === "×" ? "selected-no" : ""
+            }"
             data-date="${escapeHtml(event.id)}"
             data-value="×"
           >× 参加できない</button>
@@ -201,13 +217,19 @@ function renderDateList() {
             data-date="${escapeHtml(event.id)}"
           >
             <option value="オール（午前午後両方）"
-              ${selectedTime === "オール（午前午後両方）" ? "selected" : ""}>
+              ${
+                selectedTime === "オール（午前午後両方）"
+                  ? "selected"
+                  : ""
+              }>
               オール（午前午後両方）
             </option>
+
             <option value="午前まで"
               ${selectedTime === "午前まで" ? "selected" : ""}>
               午前まで
             </option>
+
             <option value="午後から"
               ${selectedTime === "午後から" ? "selected" : ""}>
               午後から
@@ -227,13 +249,11 @@ function renderDateList() {
 
       answers[dateId] = value;
 
-      container
-        .querySelectorAll(".choice-button")
-        .forEach(btn => {
-          if (btn.dataset.date !== dateId) return;
+      container.querySelectorAll(".choice-button").forEach(btn => {
+        if (btn.dataset.date !== dateId) return;
 
-          btn.classList.remove("selected-yes", "selected-no");
-        });
+        btn.classList.remove("selected-yes", "selected-no");
+      });
 
       button.classList.add(
         value === "○" ? "selected-yes" : "selected-no"
@@ -248,6 +268,7 @@ function eventTimeFromAnswer(answer) {
   }
 
   const time = answer.slice(2);
+
   const allowed = [
     "オール（午前午後両方）",
     "午前まで",
@@ -308,7 +329,10 @@ async function submitAnswer() {
   const label = button.querySelector("span:first-child");
 
   button.disabled = true;
-  if (label) label.textContent = "登録中…";
+
+  if (label) {
+    label.textContent = "登録中…";
+  }
 
   try {
     await apiPost({
@@ -319,19 +343,26 @@ async function submitAnswer() {
 
     showMessage("参加状況を登録しました！", "success");
 
-    // 次回の入力に前回の選択が残らないようにする
+    // 登録後に選択状態をリセット
     answers = {};
 
     await loadData();
 
-    // 登録後も選択した名前を維持する
+    // 選択した名前は維持
     document.getElementById("name").value = name;
   } catch (error) {
     console.error(error);
-    showMessage(error.message || "登録に失敗しました。", "error");
+
+    showMessage(
+      error.message || "登録に失敗しました。",
+      "error"
+    );
   } finally {
     button.disabled = false;
-    if (label) label.textContent = "登録する";
+
+    if (label) {
+      label.textContent = "登録する";
+    }
   }
 }
 
@@ -347,11 +378,13 @@ function renderParticipants() {
 
   eventDates.forEach(event => {
     const th = document.createElement("th");
+
     th.innerHTML = `
       ${escapeHtml(event.title)}
       <br>
       <small>${escapeHtml(formatDate(event.date))}</small>
     `;
+
     header.appendChild(th);
   });
 
@@ -384,6 +417,7 @@ function renderParticipants() {
         td.textContent = value.startsWith("○|")
           ? `○（${value.slice(2)}）`
           : "○";
+
         td.className = "answer-yes";
       } else if (value === "×") {
         td.textContent = "×";
@@ -409,28 +443,33 @@ function renderSummary() {
   container.innerHTML = "";
 
   if (!eventDates.length) {
-    container.innerHTML = '<p class="loading">日程がありません。</p>';
+    container.innerHTML =
+      '<p class="loading">日程がありません。</p>';
     return;
   }
 
   eventDates.forEach(event => {
     const count = participantsData.filter(person => {
       const value = person.answers?.[event.id] || "";
+
       return value === "○" || value.startsWith("○|");
     }).length;
 
     const card = document.createElement("div");
     card.className = "summary-card";
+
     card.innerHTML = `
       <div class="summary-date">
         ${escapeHtml(event.title)}
         <br>
         ${escapeHtml(formatDate(event.date))}
       </div>
+
       <div class="summary-count">
         ${count}<span>人が参加可能</span>
       </div>
     `;
+
     container.appendChild(card);
   });
 }
@@ -443,12 +482,15 @@ function loadAttendanceDates() {
   const select = document.getElementById("attendance-date-select");
   const previousValue = select.value;
 
-  select.innerHTML = '<option value="">日程を選択してください</option>';
+  select.innerHTML =
+    '<option value="">回を選択してください</option>';
 
   eventDates.forEach(event => {
     const option = document.createElement("option");
     option.value = event.id;
-    option.textContent = `${event.title}（${formatDate(event.date)}）`;
+    option.textContent =
+      `${event.title}（${formatDate(event.date)}）`;
+
     select.appendChild(option);
   });
 
@@ -460,7 +502,8 @@ function loadAttendanceDates() {
 }
 
 function updateAttendanceView() {
-  const dateId = document.getElementById("attendance-date-select").value;
+  const dateId =
+    document.getElementById("attendance-date-select").value;
 
   const yes = [];
   const no = [];
@@ -469,9 +512,25 @@ function updateAttendanceView() {
 
   if (!dateId) {
     setAttendanceCounts(0, 0, 0);
-    renderAttendanceMembers("attendance-yes-list", [], "日程を選択してください。");
-    renderAttendanceMembers("attendance-no-list", [], "日程を選択してください。");
-    renderAttendanceMembers("attendance-unanswered-list", [], "日程を選択してください。");
+
+    renderAttendanceMembers(
+      "attendance-yes-list",
+      [],
+      "回を選択してください。"
+    );
+
+    renderAttendanceMembers(
+      "attendance-no-list",
+      [],
+      "回を選択してください。"
+    );
+
+    renderAttendanceMembers(
+      "attendance-unanswered-list",
+      [],
+      "回を選択してください。"
+    );
+
     return;
   }
 
@@ -495,20 +554,41 @@ function updateAttendanceView() {
 
   // 一度も回答を登録していないメンバーも未回答に含める
   members.forEach(name => {
-    if (!answeredNames.has(name)) unanswered.push(name);
+    if (!answeredNames.has(name)) {
+      unanswered.push(name);
+    }
   });
 
-  setAttendanceCounts(yes.length, no.length, unanswered.length);
+  setAttendanceCounts(
+    yes.length,
+    no.length,
+    unanswered.length
+  );
 
-  renderAttendanceMembers("attendance-yes-list", yes, "参加可能なメンバーはいません。");
-  renderAttendanceMembers("attendance-no-list", no, "参加不可のメンバーはいません。");
-  renderAttendanceMembers("attendance-unanswered-list", unanswered, "未回答のメンバーはいません。");
+  renderAttendanceMembers(
+    "attendance-yes-list",
+    yes,
+    "参加可能なメンバーはいません。"
+  );
+
+  renderAttendanceMembers(
+    "attendance-no-list",
+    no,
+    "参加不可のメンバーはいません。"
+  );
+
+  renderAttendanceMembers(
+    "attendance-unanswered-list",
+    unanswered,
+    "未回答のメンバーはいません。"
+  );
 }
 
 function setAttendanceCounts(yes, no, unanswered) {
   document.getElementById("attendance-yes-count").textContent = yes;
   document.getElementById("attendance-no-count").textContent = no;
-  document.getElementById("attendance-unanswered-count").textContent = unanswered;
+  document.getElementById("attendance-unanswered-count").textContent =
+    unanswered;
 }
 
 function renderAttendanceMembers(elementId, list, emptyMessage) {
@@ -519,6 +599,7 @@ function renderAttendanceMembers(elementId, list, emptyMessage) {
     const empty = document.createElement("p");
     empty.className = "attendance-empty";
     empty.textContent = emptyMessage;
+
     container.appendChild(empty);
     return;
   }
@@ -550,12 +631,17 @@ function renderAttendanceMembers(elementId, list, emptyMessage) {
 
 function openAdminPanel() {
   const panel = document.getElementById("admin-panel");
+
   panel.classList.add("active");
-  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  panel.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
 
 function closeAdminPanel() {
-  document.getElementById("admin-panel").classList.remove("active");
+  document.getElementById("admin-panel")
+    .classList.remove("active");
 }
 
 async function loginAdmin() {
@@ -567,17 +653,28 @@ async function loginAdmin() {
   }
 
   try {
-    await apiGet({ action: "adminLogin", pin });
+    await apiGet({
+      action: "adminLogin",
+      pin
+    });
 
     adminPin = pin;
-    document.getElementById("admin-login").classList.add("hidden");
-    document.getElementById("admin-content").classList.remove("hidden");
+
+    document.getElementById("admin-login")
+      .classList.add("hidden");
+
+    document.getElementById("admin-content")
+      .classList.remove("hidden");
 
     showAdminMessage("ログインしました。", "success");
+
     renderAdminDates();
     renderAdminMembers();
   } catch (error) {
-    showAdminMessage(error.message || "ログインできませんでした。", "error");
+    showAdminMessage(
+      error.message || "ログインできませんでした。",
+      "error"
+    );
   }
 }
 
@@ -590,7 +687,8 @@ function renderAdminDates() {
   container.innerHTML = "";
 
   if (!eventDates.length) {
-    container.innerHTML = '<p class="loading">登録されている日程はありません。</p>';
+    container.innerHTML =
+      '<p class="loading">登録されている日程はありません。</p>';
     return;
   }
 
@@ -616,12 +714,14 @@ function renderAdminDates() {
     edit.type = "button";
     edit.className = "edit-button";
     edit.textContent = "✏️ 編集";
+
     edit.addEventListener("click", () => openDateModal(event));
 
     const del = document.createElement("button");
     del.type = "button";
     del.className = "delete-button";
     del.textContent = "🗑️ 削除";
+
     del.addEventListener("click", () => deleteDate(event.id));
 
     actions.append(edit, del);
@@ -634,15 +734,22 @@ function openDateModal(event = null) {
   document.getElementById("modal-title").textContent =
     event ? "日程を編集" : "日程を追加";
 
-  document.getElementById("edit-date-id").value = event?.id || "";
-  document.getElementById("event-date").value = event?.date || "";
-  document.getElementById("event-title").value = event?.title || "";
+  document.getElementById("edit-date-id").value =
+    event?.id || "";
 
-  document.getElementById("date-modal").classList.add("active");
+  document.getElementById("event-date").value =
+    event?.date || "";
+
+  document.getElementById("event-title").value =
+    event?.title || "";
+
+  document.getElementById("date-modal")
+    .classList.add("active");
 }
 
 function closeDateModal() {
-  document.getElementById("date-modal").classList.remove("active");
+  document.getElementById("date-modal")
+    .classList.remove("active");
 }
 
 async function saveDate() {
@@ -666,6 +773,7 @@ async function saveDate() {
 
     closeDateModal();
     await loadData();
+
     showAdminMessage("日程を保存しました。", "success");
   } catch (error) {
     alert(error.message || "日程を保存できませんでした。");
@@ -674,15 +782,24 @@ async function saveDate() {
 
 async function deleteDate(id) {
   const event = eventDates.find(item => item.id === id);
+
   if (!event) return;
 
-  if (!confirm(`「${event.title}」を削除しますか？\nこの日程の回答も削除されます。`)) {
+  if (!confirm(
+    `「${event.title}」を削除しますか？\nこの日程の回答も削除されます。`
+  )) {
     return;
   }
 
   try {
-    await apiPost({ action: "deleteDate", pin: adminPin, id });
+    await apiPost({
+      action: "deleteDate",
+      pin: adminPin,
+      id
+    });
+
     await loadData();
+
     showAdminMessage("日程を削除しました。", "success");
   } catch (error) {
     alert(error.message || "日程を削除できませんでした。");
@@ -693,13 +810,15 @@ async function deleteDate(id) {
    管理者：メンバー管理
 ================================================== */
 
-async function addMemberFromForm(event) {
-  event.preventDefault();
-
-  const input = document.getElementById("member-name");
+// 現在のHTMLの入力欄 new-member-name に対応
+async function addMemberFromForm() {
+  const input = document.getElementById("new-member-name");
   const name = input.value.trim();
 
-  if (!name) return;
+  if (!name) {
+    alert("生徒氏名を入力してください。");
+    return;
+  }
 
   try {
     await apiPost({
@@ -709,7 +828,9 @@ async function addMemberFromForm(event) {
     });
 
     input.value = "";
+
     await loadData();
+
     showAdminMessage("メンバーを追加しました。", "success");
   } catch (error) {
     alert(error.message || "メンバーを追加できませんでした。");
@@ -721,7 +842,8 @@ function renderAdminMembers() {
   container.innerHTML = "";
 
   if (!members.length) {
-    container.innerHTML = '<p class="loading">メンバーが登録されていません。</p>';
+    container.innerHTML =
+      '<p class="loading">メンバーが登録されていません。</p>';
     return;
   }
 
@@ -739,12 +861,14 @@ function renderAdminMembers() {
     edit.type = "button";
     edit.className = "edit-button";
     edit.textContent = "✏️ 名前を変更";
+
     edit.addEventListener("click", () => editMember(name));
 
     const del = document.createElement("button");
     del.type = "button";
     del.className = "delete-button";
     del.textContent = "🗑️ 削除";
+
     del.addEventListener("click", () => deleteMember(name));
 
     actions.append(edit, del);
@@ -754,7 +878,11 @@ function renderAdminMembers() {
 }
 
 async function editMember(oldName) {
-  const newName = prompt("新しいメンバー名を入力してください。", oldName);
+  const newName = prompt(
+    "新しいメンバー名を入力してください。",
+    oldName
+  );
+
   if (newName === null) return;
 
   const name = newName.trim();
@@ -775,6 +903,7 @@ async function editMember(oldName) {
     });
 
     await loadData();
+
     showAdminMessage("メンバー名を変更しました。", "success");
   } catch (error) {
     alert(error.message || "メンバー名を変更できませんでした。");
@@ -782,7 +911,9 @@ async function editMember(oldName) {
 }
 
 async function deleteMember(name) {
-  if (!confirm(`「${name}」をメンバー一覧から削除しますか？\n登録済みの回答も削除されます。`)) {
+  if (!confirm(
+    `「${name}」をメンバー一覧から削除しますか？\n登録済みの回答も削除されます。`
+  )) {
     return;
   }
 
@@ -794,6 +925,7 @@ async function deleteMember(name) {
     });
 
     await loadData();
+
     showAdminMessage("メンバーを削除しました。", "success");
   } catch (error) {
     alert(error.message || "メンバーを削除できませんでした。");
@@ -810,7 +942,9 @@ function showMessage(text, type) {
   message.textContent = text;
   message.className = `message ${type}`;
 
-  if (messageTimer) clearTimeout(messageTimer);
+  if (messageTimer) {
+    clearTimeout(messageTimer);
+  }
 
   messageTimer = setTimeout(() => {
     message.className = "message";
@@ -819,6 +953,7 @@ function showMessage(text, type) {
 
 function showAdminMessage(text, type) {
   const message = document.getElementById("admin-message");
+
   message.textContent = text;
   message.className = `admin-message ${type}`;
 }
@@ -828,7 +963,9 @@ function formatDate(dateString) {
 
   const date = new Date(`${dateString}T00:00:00`);
 
-  if (Number.isNaN(date.getTime())) return dateString;
+  if (Number.isNaN(date.getTime())) {
+    return dateString;
+  }
 
   const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
 
