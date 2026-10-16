@@ -226,9 +226,9 @@ function renderDateList() {
             class="attendance-time-select"
             data-date="${escapeHtml(event.id)}"
           >
-            <option value="オール（午前午後両方）"
-              ${selectedTime === "オール（午前午後両方）" ? "selected" : ""}>
-              オール（午前午後両方）
+            <option value="終日"
+              ${selectedTime === "終日" ? "selected" : ""}>
+              終日
             </option>
 
             <option value="午前まで"
@@ -269,20 +269,20 @@ function renderDateList() {
 
 function eventTimeFromAnswer(answer) {
   if (typeof answer !== "string" || !answer.startsWith("○|")) {
-    return "オール（午前午後両方）";
+    return "終日";
   }
 
   const time = answer.slice(2);
 
   const allowed = [
-    "オール（午前午後両方）",
+    "終日",
     "午前まで",
     "午後から"
   ];
 
   return allowed.includes(time)
     ? time
-    : "オール（午前午後両方）";
+    : "終日";
 }
 
 /* ==================================================
@@ -319,7 +319,7 @@ async function submitAnswer() {
 
       const time = timeSelect
         ? timeSelect.value
-        : "オール（午前午後両方）";
+        : "終日";
 
       selectedAnswers[event.id] = `○|${time}`;
     }
@@ -546,7 +546,7 @@ function updateAttendanceView() {
         name: person.name,
         time: value.startsWith("○|")
           ? value.slice(2)
-          : "オール（午前午後両方）"
+          : "終日"
       });
     } else if (value === "×") {
       no.push(person.name);
