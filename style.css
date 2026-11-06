@@ -1401,3 +1401,38 @@ footer { padding: 20px 0 35px; color: var(--muted); text-align: center; font-siz
     width: 100%;
   }
 }
+
+/* ==================================================
+   所属別表示
+================================================== */
+
+.attendance-affiliation-group {
+  margin-bottom: 16px;
+}
+
+.attendance-group-title {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* 生徒会：黄色 */
+.affiliation-student {
+  background: #ffe36e;
+  color: #332700;
+}
+
+/* KSV */
+.affiliation-ksv {
+  background: #d9eaff;
+  color: #174b80;
+}
+
+/* 所属未設定 */
+.affiliation-unknown {
+  background: #e5e7eb;
+  color: #374151;
+}
