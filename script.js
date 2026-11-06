@@ -636,7 +636,7 @@ function renderAttendanceMembers(elementId, list, emptyMessage) {
 
     if (affiliation === "生徒会") {
       badge.classList.add("affiliation-student");
-    } else if (affiliation === "KSV（ボランティア）") {
+    } else if (affiliation === "KSV") {
       badge.classList.add("affiliation-ksv");
     } else {
       badge.classList.add("affiliation-unknown");
@@ -912,7 +912,7 @@ function renderAdminMembers() {
 
     if (affiliation === "生徒会") {
       badge.classList.add("affiliation-student");
-    } else if (affiliation === "KSV（ボランティア）") {
+    } else if (affiliation === "KSV") {
       badge.classList.add("affiliation-ksv");
     } else {
       badge.classList.add("affiliation-unknown");
@@ -929,7 +929,7 @@ function renderAdminMembers() {
 
     [
       "生徒会",
-      "KSV（ボランティア）",
+      "KSV",
       "未設定"
     ].forEach(value => {
       const option = document.createElement("option");
