@@ -1436,3 +1436,32 @@ footer { padding: 20px 0 35px; color: var(--muted); text-align: center; font-siz
   background: #e5e7eb;
   color: #374151;
 }
+
+/* ==================================================
+   参加可能メンバーを横並びにする
+================================================== */
+
+.attendance-affiliation-group {
+  margin-bottom: 18px;
+}
+
+.attendance-affiliation-group .attendance-group-title {
+  display: block;
+  width: fit-content;
+  margin-bottom: 8px;
+}
+
+.attendance-affiliation-group .attendance-member {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  margin: 0 8px 8px 0;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: #f1f3f5;
+  gap: 0;
+}
+
+.attendance-affiliation-group .attendance-member-time {
+  display: none;
+}
