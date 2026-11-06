@@ -606,10 +606,6 @@ function setAttendanceCounts(yes, no, unanswered) {
    参加可能メンバー：所属別表示
 ================================================== */
 
-/* ==================================================
-   参加可能メンバー：所属別表示
-================================================== */
-
 function renderAvailableMembers(list) {
   const container = document.getElementById("attendance-yes-list");
   if (!container) return;
@@ -666,20 +662,16 @@ function renderAvailableMembers(list) {
       const row = document.createElement("div");
       row.className = "attendance-member";
 
+      // 名前
       const name = document.createElement("span");
+      name.textContent = person.name;
 
-      // 参加可能時間を取得
-      const availableTime =
-        person.availableTime ||
-        person.time ||
-        person.period ||
-        "";
+      // 参加可能時間
+      const time = document.createElement("span");
+      time.className = "attendance-member-time";
+      time.textContent = person.time || "終日";
 
-      name.textContent = availableTime
-        ? `${person.name} (${availableTime})`
-        : person.name;
-
-      row.appendChild(name);
+      row.append(name, time);
       section.appendChild(row);
     });
 
