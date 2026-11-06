@@ -576,19 +576,27 @@ function updateAttendanceView() {
     unanswered.length
   );
 
-  renderAvailableMembers(yes);
+  // 参加可能
+renderAffiliationMembers(
+  "attendance-yes-list",
+  yes,
+  "参加可能なメンバーはいません。"
+);
 
-  renderAttendanceMembers(
-    "attendance-no-list",
-    no,
-    "参加不可のメンバーはいません。"
-  );
+// 参加不可
+renderAffiliationMembers(
+  "attendance-no-list",
+  no,
+  "参加不可のメンバーはいません。"
+);
 
-  renderAttendanceMembers(
-    "attendance-unanswered-list",
-    unanswered,
-    "未回答のメンバーはいません。"
-  );
+// 未回答
+renderAffiliationMembers(
+  "attendance-unanswered-list",
+  unanswered,
+  "未回答のメンバーはいません。"
+);
+  
 }
 
 function setAttendanceCounts(yes, no, unanswered) {
@@ -603,11 +611,11 @@ function setAttendanceCounts(yes, no, unanswered) {
 }
 
 /* ==================================================
-   参加可能メンバー：所属別表示
+   参加状況：所属別メンバー表示
 ================================================== */
 
-function renderAvailableMembers(list) {
-  const container = document.getElementById("attendance-yes-list");
+function renderAffiliationMembers(elementId, list, emptyMessage) {
+  const container = document.getElementById(elementId);
   if (!container) return;
 
   container.innerHTML = "";
@@ -615,7 +623,7 @@ function renderAvailableMembers(list) {
   if (!list.length) {
     const empty = document.createElement("p");
     empty.className = "attendance-empty";
-    empty.textContent = "参加可能なメンバーはいません。";
+    empty.textContent = emptyMessage;
     container.appendChild(empty);
     return;
   }
@@ -627,18 +635,23 @@ function renderAvailableMembers(list) {
   ];
 
   list.forEach(person => {
-    const member = members.find(item => item.name === person.name);
-    const affiliation = member?.affiliation || "未設定";
+    const name = typeof person === "string"
+      ? person
+      : person.name;
+
+    const member = members.find(item =>
+      (typeof item === "string" ? item : item.name) === name
+    );
+
+    const affiliation = typeof member === "object" && member
+      ? member.affiliation || "未設定"
+      : "未設定";
 
     const group = groups.find(
       item => item.affiliation === affiliation
     );
 
-    if (group) {
-      group.members.push(person);
-    } else {
-      groups[2].members.push(person);
-    }
+    (group || groups[2]).members.push(person);
   });
 
   groups.forEach(group => {
@@ -662,16 +675,21 @@ function renderAvailableMembers(list) {
       const row = document.createElement("div");
       row.className = "attendance-member";
 
-      // 名前
       const name = document.createElement("span");
-      name.textContent = person.name;
+      name.textContent = typeof person === "string"
+        ? person
+        : person.name;
 
-      // 参加可能時間
-      const time = document.createElement("span");
-      time.className = "attendance-member-time";
-      time.textContent = person.time || "終日";
+      row.appendChild(name);
 
-      row.append(name, time);
+      // 参加可能なメンバーだけ参加時間を表示
+      if (typeof person === "object" && person.time) {
+        const time = document.createElement("span");
+        time.className = "attendance-member-time";
+        time.textContent = person.time;
+        row.appendChild(time);
+      }
+
       section.appendChild(row);
     });
 
