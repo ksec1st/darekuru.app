@@ -1325,3 +1325,79 @@ footer { padding: 20px 0 35px; color: var(--muted); text-align: center; font-siz
     font-size: 14px;
   }
 }
+
+/* ========================================
+   所属表示
+======================================== */
+
+.affiliation-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.affiliation-student {
+  color: #245b9e;
+  background: #e7f1ff;
+  border: 1px solid #c5dcfb;
+}
+
+.affiliation-ksv {
+  color: #087449;
+  background: #e5f7ee;
+  border: 1px solid #b8e5ce;
+}
+
+.affiliation-unknown {
+  color: #64748b;
+  background: #f1f5f9;
+  border: 1px solid #dbe3ed;
+}
+
+.admin-member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.admin-member-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-member-controls select {
+  width: auto;
+  min-width: 180px;
+  min-height: 38px;
+  font-size: 12px;
+}
+
+.attendance-member {
+  align-items: center;
+}
+
+.attendance-member .affiliation-badge {
+  font-size: 10px;
+}
+
+@media (max-width: 650px) {
+  .member-add-area {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-member-controls {
+    width: 100%;
+  }
+
+  .admin-member-controls select {
+    width: 100%;
+  }
+}
