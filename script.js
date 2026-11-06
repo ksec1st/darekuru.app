@@ -148,8 +148,10 @@ function renderMemberSelect() {
   members.forEach(member => {
     const option = document.createElement("option");
     option.value = member.name;
-    option.textContent =
-      `${member.name}（${member.affiliation || "未設定"}）`;
+
+    const affiliation = member.affiliation || "未設定";
+    option.textContent = `(${affiliation}) ${member.name}`;
+
     select.appendChild(option);
   });
 
@@ -574,11 +576,7 @@ function updateAttendanceView() {
     unanswered.length
   );
 
-  renderAttendanceMembers(
-    "attendance-yes-list",
-    yes,
-    "参加可能なメンバーはいません。"
-  );
+  renderAvailableMembers(yes);
 
   renderAttendanceMembers(
     "attendance-no-list",
@@ -602,6 +600,81 @@ function setAttendanceCounts(yes, no, unanswered) {
   if (yesCount) yesCount.textContent = yes;
   if (noCount) noCount.textContent = no;
   if (unansweredCount) unansweredCount.textContent = unanswered;
+}
+
+/* ==================================================
+   参加可能メンバー：所属別表示
+================================================== */
+
+function renderAvailableMembers(list) {
+  const container = document.getElementById("attendance-yes-list");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!list.length) {
+    const empty = document.createElement("p");
+    empty.className = "attendance-empty";
+    empty.textContent = "参加可能なメンバーはいません。";
+    container.appendChild(empty);
+    return;
+  }
+
+  const groups = [
+    { affiliation: "生徒会", members: [] },
+    { affiliation: "KSV", members: [] },
+    { affiliation: "未設定", members: [] }
+  ];
+
+  list.forEach(person => {
+    const member = members.find(item => item.name === person.name);
+    const affiliation = member?.affiliation || "未設定";
+
+    const group = groups.find(
+      item => item.affiliation === affiliation
+    );
+
+    if (group) {
+      group.members.push(person);
+    } else {
+      groups[2].members.push(person);
+    }
+  });
+
+  groups.forEach(group => {
+    if (!group.members.length) return;
+
+    const section = document.createElement("div");
+    section.className = "attendance-affiliation-group";
+
+    const heading = document.createElement("h4");
+    heading.className =
+      group.affiliation === "生徒会"
+        ? "attendance-group-title affiliation-student"
+        : group.affiliation === "KSV"
+          ? "attendance-group-title affiliation-ksv"
+          : "attendance-group-title affiliation-unknown";
+
+    heading.textContent = group.affiliation;
+    section.appendChild(heading);
+
+    group.members.forEach(person => {
+      const row = document.createElement("div");
+      row.className = "attendance-member";
+
+      const name = document.createElement("span");
+      name.textContent = person.name;
+
+      const time = document.createElement("span");
+      time.className = "attendance-member-time";
+      time.textContent = person.time || "";
+
+      row.append(name, time);
+      section.appendChild(row);
+    });
+
+    container.appendChild(section);
+  });
 }
 
 function renderAttendanceMembers(elementId, list, emptyMessage) {
