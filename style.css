@@ -1462,6 +1462,23 @@ footer { padding: 20px 0 35px; color: var(--muted); text-align: center; font-siz
   gap: 0;
 }
 
+/* 参加時間ラベルを元のデザインに戻す */
+.attendance-affiliation-group .attendance-member {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 7px;
+  width: auto;
+  margin: 0 8px 8px 0;
+  padding: 9px 11px;
+}
+
 .attendance-affiliation-group .attendance-member-time {
-  display: none;
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: #e4efff;
+  color: #245b9e;
+  font-size: 11px;
+  white-space: nowrap;
 }
