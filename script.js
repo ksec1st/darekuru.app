@@ -1,4 +1,3 @@
-
 /**************************************************
  * だれくる｜KSEC 1st
  * script.js
@@ -146,14 +145,15 @@ function renderMemberSelect() {
   placeholder.textContent = "名前を選択してください";
   select.appendChild(placeholder);
 
-  members.forEach(name => {
+  members.forEach(member => {
     const option = document.createElement("option");
-    option.value = name;
-    option.textContent = name;
+    option.value = member.name;
+    option.textContent =
+      `${member.name}（${member.affiliation || "未設定"}）`;
     select.appendChild(option);
   });
 
-  if (members.includes(previousValue)) {
+  if (members.some(member => member.name === previousValue)) {
     select.value = previousValue;
   }
 
@@ -539,26 +539,32 @@ function updateAttendanceView() {
 
   participantsData.forEach(person => {
     const value = person.answers?.[dateId] || "";
+
     answeredNames.add(person.name);
+
+    const member = {
+      name: person.name,
+      affiliation: person.affiliation || "未設定"
+    };
 
     if (value === "○" || value.startsWith("○|")) {
       yes.push({
-        name: person.name,
+        ...member,
         time: value.startsWith("○|")
           ? value.slice(2)
           : "終日"
       });
     } else if (value === "×") {
-      no.push(person.name);
+      no.push(member);
     } else {
-      unanswered.push(person.name);
+      unanswered.push(member);
     }
   });
 
   // 一度も回答を登録していないメンバーも未回答に含める
-  members.forEach(name => {
-    if (!answeredNames.has(name)) {
-      unanswered.push(name);
+  members.forEach(member => {
+    if (!answeredNames.has(member.name)) {
+      unanswered.push(member);
     }
   });
 
@@ -616,17 +622,35 @@ function renderAttendanceMembers(elementId, list, emptyMessage) {
     const row = document.createElement("div");
     row.className = "attendance-member";
 
-    if (typeof item === "string") {
-      row.textContent = item;
-    } else {
-      const name = document.createElement("span");
-      name.textContent = item.name;
+    const person = typeof item === "string"
+      ? { name: item, affiliation: "未設定" }
+      : item;
 
+    const name = document.createElement("span");
+    name.textContent = person.name;
+
+    const badge = document.createElement("span");
+    const affiliation = person.affiliation || "未設定";
+
+    badge.className = "affiliation-badge";
+
+    if (affiliation === "生徒会") {
+      badge.classList.add("affiliation-student");
+    } else if (affiliation === "KSV（ボランティア）") {
+      badge.classList.add("affiliation-ksv");
+    } else {
+      badge.classList.add("affiliation-unknown");
+    }
+
+    badge.textContent = affiliation;
+
+    row.append(name, badge);
+
+    if (person.time) {
       const time = document.createElement("span");
       time.className = "attendance-member-time";
-      time.textContent = item.time;
-
-      row.append(name, time);
+      time.textContent = person.time;
+      row.appendChild(time);
     }
 
     container.appendChild(row);
@@ -826,9 +850,13 @@ async function deleteDate(id) {
 
 async function addMemberFromForm() {
   const input = document.getElementById("new-member-name");
-  if (!input) return;
+  const affiliationSelect =
+    document.getElementById("new-member-affiliation");
+
+  if (!input || !affiliationSelect) return;
 
   const name = input.value.trim();
+  const affiliation = affiliationSelect.value;
 
   if (!name) {
     alert("生徒氏名を入力してください。");
@@ -839,17 +867,21 @@ async function addMemberFromForm() {
     await apiPost({
       action: "addMember",
       pin: adminPin,
-      name
+      name,
+      affiliation
     });
 
     input.value = "";
+
     await loadData();
 
     showAdminMessage("メンバーを追加しました。", "success");
+
   } catch (error) {
     alert(error.message || "メンバーを追加できませんでした。");
   }
 }
+
 
 function renderAdminMembers() {
   const container = document.getElementById("admin-member-list");
@@ -863,34 +895,104 @@ function renderAdminMembers() {
     return;
   }
 
-  members.forEach(name => {
+  members.forEach(member => {
     const item = document.createElement("div");
     item.className = "admin-member-item";
 
-    const label = document.createElement("strong");
-    label.textContent = name;
+    const info = document.createElement("div");
+    info.className = "admin-member-info";
 
-    const actions = document.createElement("div");
-    actions.className = "admin-date-actions";
+    const label = document.createElement("strong");
+    label.textContent = member.name;
+
+    const affiliation = member.affiliation || "未設定";
+
+    const badge = document.createElement("span");
+    badge.className = "affiliation-badge";
+
+    if (affiliation === "生徒会") {
+      badge.classList.add("affiliation-student");
+    } else if (affiliation === "KSV（ボランティア）") {
+      badge.classList.add("affiliation-ksv");
+    } else {
+      badge.classList.add("affiliation-unknown");
+    }
+
+    badge.textContent = affiliation;
+
+    info.append(label, badge);
+
+    const controls = document.createElement("div");
+    controls.className = "admin-member-controls";
+
+    const select = document.createElement("select");
+
+    [
+      "生徒会",
+      "KSV（ボランティア）",
+      "未設定"
+    ].forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    });
+
+    select.value = affiliation;
+
+    const save = document.createElement("button");
+    save.type = "button";
+    save.className = "edit-button";
+    save.textContent = "所属を保存";
+
+    save.addEventListener("click", () => {
+      updateMemberAffiliation(member.name, select.value);
+    });
 
     const edit = document.createElement("button");
     edit.type = "button";
     edit.className = "edit-button";
     edit.textContent = "✏️ 名前を変更";
-    edit.addEventListener("click", () => editMember(name));
+    edit.addEventListener("click", () => editMember(member.name));
 
     const del = document.createElement("button");
     del.type = "button";
     del.className = "delete-button";
     del.textContent = "🗑️ 削除";
-    del.addEventListener("click", () => deleteMember(name));
+    del.addEventListener("click", () => deleteMember(member.name));
 
-    actions.append(edit, del);
-    item.append(label, actions);
+    controls.append(select, save, edit, del);
+
+    item.append(info, controls);
     container.appendChild(item);
   });
 }
 
+
+/* 所属変更 */
+async function updateMemberAffiliation(name, affiliation) {
+  try {
+    await apiPost({
+      action: "updateMember",
+      pin: adminPin,
+      oldName: name,
+      affiliation
+    });
+
+    await loadData();
+
+    showAdminMessage(
+      `${name} さんの所属を変更しました。`,
+      "success"
+    );
+
+  } catch (error) {
+    alert(error.message || "所属を変更できませんでした。");
+  }
+}
+
+
+/* 名前変更 */
 async function editMember(oldName) {
   const newName = prompt(
     "新しいメンバー名を入力してください。",
@@ -917,12 +1019,16 @@ async function editMember(oldName) {
     });
 
     await loadData();
+
     showAdminMessage("メンバー名を変更しました。", "success");
+
   } catch (error) {
     alert(error.message || "メンバー名を変更できませんでした。");
   }
 }
 
+
+/* メンバー削除 */
 async function deleteMember(name) {
   if (!confirm(
     `「${name}」をメンバー一覧から削除しますか？\n登録済みの回答も削除されます。`
@@ -938,7 +1044,9 @@ async function deleteMember(name) {
     });
 
     await loadData();
+
     showAdminMessage("メンバーを削除しました。", "success");
+
   } catch (error) {
     alert(error.message || "メンバーを削除できませんでした。");
   }
