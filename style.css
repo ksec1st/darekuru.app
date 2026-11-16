@@ -1482,3 +1482,151 @@ footer { padding: 20px 0 35px; color: var(--muted); text-align: center; font-siz
   font-size: 11px;
   white-space: nowrap;
 }
+
+/* ================================
+   締切表示
+================================ */
+
+.vote-deadline {
+  margin-top: 9px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #eef5ff;
+  color: #245b9e;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.vote-deadline.closed {
+  background: #fff1f0;
+  color: #b42318;
+}
+
+.vote-closed-message {
+  margin-top: 8px;
+  padding: 11px;
+  border-radius: 8px;
+  background: #fff7e8;
+  color: #805300;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.date-item.vote-closed .choice-button,
+.date-item.vote-closed .attendance-time-select {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ================================
+   当日欠席連絡
+================================ */
+
+.absence-report-section {
+  margin: 28px 0;
+  padding: 22px;
+  border: 1px solid #dce5f0;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.absence-report-section h3 {
+  margin: 0 0 10px;
+}
+
+.absence-report-section select,
+.absence-report-section textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccd6e2;
+  border-radius: 9px;
+  font: inherit;
+  background: #ffffff;
+  color: #222222;
+}
+
+.absence-report-section textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+#absence-message {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.admin-absence-section {
+  margin-top: 30px;
+  padding: 18px;
+  border: 1px solid #dce5f0;
+  border-radius: 12px;
+}
+
+.admin-absence-item {
+  padding: 14px;
+  margin-top: 12px;
+  border: 1px solid #e1e7ef;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.admin-absence-item p {
+  margin: 6px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ================================
+   生徒登録欄の幅調整
+================================ */
+
+.member-add-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 115px auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.member-add-area #new-member-name {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.member-add-area #new-member-affiliation {
+  width: 115px;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px 8px;
+  border: 1px solid #ccd6e2;
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+}
+
+.member-add-area #add-member-button {
+  white-space: nowrap;
+}
+
+@media (max-width: 650px) {
+  .member-add-area {
+    grid-template-columns: minmax(0, 1fr) 105px;
+    align-items: stretch;
+  }
+
+  .member-add-area #new-member-affiliation {
+    width: 105px;
+  }
+
+  .member-add-area #add-member-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .absence-report-section {
+    padding: 16px;
+  }
+}
