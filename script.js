@@ -146,24 +146,35 @@ function renderMemberSelect() {
   select.appendChild(placeholder);
 
   members.forEach(member => {
-    const option = document.createElement("option");
-    option.value = member.name;
+    const name = typeof member === "string"
+      ? member
+      : member.name;
 
-    const affiliation = member.affiliation || "未設定";
-    option.textContent = `(${affiliation}) ${member.name}`;
+    const affiliation = typeof member === "object"
+      ? member.affiliation || "未設定"
+      : "未設定";
+
+    if (!name) return;
+
+    const option = document.createElement("option");
+
+    // 送信する値は名前だけ
+    option.value = name;
+
+    // 画面上では所属も表示
+    option.textContent = `(${affiliation})${name}`;
 
     select.appendChild(option);
   });
 
-  if (members.some(member => member.name === previousValue)) {
+  if ([...select.options].some(option => option.value === previousValue)) {
     select.value = previousValue;
   }
 
   select.disabled = members.length === 0;
 
   if (!members.length) {
-    placeholder.textContent =
-      "登録されているメンバーがいません";
+    placeholder.textContent = "登録されているメンバーがいません";
   }
 }
 
