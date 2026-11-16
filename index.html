@@ -33,6 +33,50 @@
 <div class="form-group"><label>参加可能日<span class="required">必須</span></label><p class="form-description">参加できる日は「○」、参加できない日は「×」を選択してください。</p><div id="date-list" class="date-list">
 <div class="loading">日程を読み込んでいます…</div></div></div><button id="submit-button" class="submit-button" type="button"><span>登録する</span><span class="button-arrow"> →</span></button>
 <div id="message" class="message"></div></section>
+
+
+<section class="absence-report-section">
+  <h3>📩 当日欠席連絡</h3>
+  <p class="form-description">
+    急な欠席が必要になった場合はこちらから連絡してください。
+  </p>
+
+  <div class="form-group">
+    <label for="absence-name">名前</label>
+    <select id="absence-name">
+      <option value="">名前を選択してください</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="absence-date">欠席する日程</label>
+    <select id="absence-date">
+      <option value="">日程を選択してください</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="absence-reason">欠席理由</label>
+    <textarea
+      id="absence-reason"
+      rows="4"
+      maxlength="500"
+      placeholder="欠席理由を入力してください"
+    ></textarea>
+  </div>
+
+  <button
+    type="button"
+    id="absence-submit-button"
+    class="submit-button"
+  >
+    欠席連絡を送信する
+  </button>
+
+  <p id="absence-message" aria-live="polite"></p>
+</section>
+
+  
 <!-- INFO -->
 <section class="info-card">
 <div class="info-icon">ℹ️</div><div><h3>登録について</h3><p>同じ名前で再度登録すると、以前の回答が最新の内容に更新されます。</p></div>
@@ -67,24 +111,71 @@
 <!-- 未回答 -->
 <div class="attendance-member-box"><h3>⚪ 未回答のメンバー</h3><div id="attendance-unanswered-list" class="attendance-member-list"><p class="attendance-empty">回を選択してください。</p></div></div>
 </section>
+
+  
 <!-- ADMIN -->
 <section id="admin-panel" class="admin-panel">
 <div class="admin-panel-header"><div><span>ADMINISTRATION</span><h2>日程管理</h2></div><button id="admin-close-button" class="close-button">×</button></div>
 <!-- LOGIN -->
 <div id="admin-login" class="admin-login"><p>管理者PINを入力してください。</p><div class="admin-login-row"><input type="password" id="admin-pin" placeholder="管理者PIN">
 <button id="admin-login-button" class="primary-small-button">ログイン</button></div><div id="admin-message" class="admin-message"></div></div>
+
+  
 <!-- ADMIN CONTENT -->
 <div id="admin-content" class="admin-content hidden">
+
+<section class="admin-absence-section">
+  <h3>📩 当日欠席連絡一覧</h3>
+  <p>生徒から送信された欠席連絡を確認できます。</p>
+
+  <button
+    type="button"
+    id="absence-refresh-button"
+    class="primary-small-button"
+  >
+    一覧を更新
+  </button>
+
+  <div id="admin-absence-list">
+    欠席連絡を読み込んでいます…
+  </div>
+</section>
+
+  
 <!-- DATE MANAGEMENT -->
 <div class="admin-toolbar admin-toolbar-date">
 <div><strong>📅 オーキャン日程</strong><p>日程の追加・変更・削除ができます。</p></div><button id="add-date-button" class="primary-button">＋ 日程を追加</button></div><div id="admin-date-list" class="admin-date-list"></div>
 <!-- MEMBER MANAGEMENT -->
 <div class="admin-toolbar">
 <div><strong>👥 生徒管理</strong><p>参加者として登録するメンバーを管理できます。</p></div></div>
+
+  
 <div class="member-add-area">
-<input type="text" id="new-member-name" placeholder="生徒氏名を入力">
-<select id="new-member-affiliation"><option value="生徒会">生徒会</option><option value="KSV（ボランティア）">KSV</option></select><button id="add-member-button" class="primary-button">＋ 生徒を追加</button></div><div id="admin-member-list" class="admin-member-list"></div>
-</div></section>
+  <input
+    type="text"
+    id="new-member-name"
+    placeholder="生徒氏名を入力"
+  >
+
+  <select id="new-member-affiliation">
+    <option value="生徒会">生徒会</option>
+    <option value="KSV">KSV</option>
+  </select>
+
+  <button
+    type="button"
+    id="add-member-button"
+    class="primary-button"
+  >
+    ＋ 生徒を追加
+  </button>
+</div>
+
+  
+<div id="admin-member-list" class="admin-member-list"></div>
+</div>
+
+</section>
 
 </main>
 
