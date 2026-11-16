@@ -1,0 +1,1639 @@
+:root {
+  --navy: #123b70;
+  --blue: #2468b4;
+  --blue-light: #edf4ff;
+  --ink: #1d2b3e;
+  --muted: #718096;
+  --line: #e2e8f0;
+  --surface: #ffffff;
+  --page: #f4f7fb;
+  --green: #16845b;
+  --red: #c33d4b;
+  --shadow: 0 12px 35px rgba(25, 55, 90, .07);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Noto Sans JP", sans-serif;
+  line-height: 1.65;
+}
+
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .55; cursor: not-allowed; }
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px max(20px, calc((100% - 1060px) / 2));
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+.brand strong, .brand span { display: block; }
+.brand strong { font-size: 14px; }
+.brand span { color: var(--muted); font-size: 10px; letter-spacing: 1.2px; }
+
+.container { width: min(100% - 32px, 900px); margin: 0 auto; }
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin: 28px 0 20px;
+  padding: clamp(28px, 6vw, 54px);
+  border-radius: 24px;
+  background: linear-gradient(125deg, #102e56, #1c5c9d);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  right: -70px;
+  top: -95px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 50%;
+  box-shadow: 0 0 0 30px rgba(255,255,255,.04), 0 0 0 65px rgba(255,255,255,.03);
+}
+.eyebrow { margin: 0 0 8px; font-size: 11px; font-weight: 800; letter-spacing: 2px; }
+.hero h1 { margin: 0; font-size: clamp(30px, 6vw, 46px); line-height: 1.3; }
+.hero h1 span { color: #b9dcff; }
+.hero > p:last-child { max-width: 540px; margin-bottom: 0; color: #e0edff; font-size: 14px; }
+
+.panel {
+  margin: 18px 0;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.section-heading { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 22px; }
+.section-heading h2 { margin: 0 0 3px; font-size: 20px; }
+.section-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+.step {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--blue-light);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+label { display: block; margin: 10px 0 7px; font-size: 13px; font-weight: 750; }
+input, select {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #d5deea;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+}
+input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(36,104,180,.12); }
+
+.button {
+  min-height: 42px;
+  padding: 9px 15px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-weight: 750;
+  font-size: 13px;
+  transition: transform .15s, background .15s;
+}
+.button:hover { transform: translateY(-1px); }
+.button-primary { background: var(--blue); color: #fff; }
+.button-primary:hover { background: var(--navy); }
+.button-outline { background: #fff; color: var(--navy); border-color: #cbd6e4; }
+.button-wide { width: 100%; min-height: 52px; margin-top: 22px; font-size: 15px; }
+
+.date-item {
+  display: grid;
+  grid-template-columns: minmax(130px, .7fr) minmax(0, 1.3fr);
+  gap: 18px;
+  padding: 19px 0;
+  border-bottom: 1px solid var(--line);
+}
+.date-item:last-child { border-bottom: 0; }
+.date-name { font-weight: 800; }
+.date-name small { color: var(--muted); font-weight: 500; font-size: 12px; }
+.date-answer-controls { display: flex; flex-direction: column; gap: 12px; }
+.date-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.choice-button {
+  min-height: 44px;
+  padding: 9px 8px;
+  border: 1px solid #dce3ed;
+  border-radius: 10px;
+  background: #fff;
+  color: #46566a;
+  font-size: 13px;
+  font-weight: 750;
+}
+.choice-button:hover { border-color: #8aaad0; }
+.choice-button.selected-yes { background: #e8f7ef; color: #087449; border-color: #58b78c; }
+.choice-button.selected-no { background: #fff0f0; color: #b72e3b; border-color: #e69aa2; }
+
+.attendance-time-area { display: flex; flex-direction: column; gap: 5px; }
+.attendance-time-area label { margin: 0; color: var(--muted); font-size: 12px; }
+.attendance-time-select { min-height: 42px; font-size: 13px; }
+
+.summary-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+.summary-card { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #fbfcfe; }
+.summary-date { font-size: 13px; font-weight: 750; }
+.summary-count { margin-top: 8px; color: var(--blue); font-size: 24px; font-weight: 900; }
+.summary-count span { margin-left: 5px; color: var(--muted); font-size: 12px; font-weight: 500; }
+
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); text-align: center; }
+th { background: #f4f7fb; color: #53657b; font-size: 12px; }
+th:first-child, td:first-child { text-align: left; }
+tbody tr:last-child td { border-bottom: 0; }
+.name-cell { font-weight: 750; }
+.answer-yes { color: var(--green); font-weight: 900; }
+.answer-no { color: var(--red); font-weight: 900; }
+.answer-empty { color: #a0aaba; }
+.table-empty { text-align: center; color: var(--muted); padding: 25px; }
+
+.attendance-section > select { margin-bottom: 18px; }
+.attendance-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
+.attendance-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 5px 10px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+}
+.attendance-card > span { font-size: 12px; font-weight: 750; }
+.attendance-card strong { grid-row: span 2; font-size: 30px; }
+.attendance-card small { color: var(--muted); font-size: 11px; }
+.attendance-card.available { background: #f0faf5; }
+.attendance-card.unavailable { background: #fff5f5; }
+.attendance-card.unanswered { background: #f6f8fb; }
+.attendance-member-box { margin-top: 13px; padding: 16px; border: 1px solid var(--line); border-radius: 13px; }
+.attendance-member-box h3 { margin: 0 0 12px; font-size: 14px; }
+.attendance-member-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.attendance-member { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 9px 11px; border-radius: 9px; background: #f4f7fb; font-size: 13px; }
+.attendance-member-time { padding: 3px 7px; border-radius: 6px; background: #e4efff; color: #245b9e; font-size: 11px; }
+.attendance-empty, .loading { color: var(--muted); font-size: 13px; }
+
+.message, .admin-message { display: none; margin: 12px 0; padding: 12px 14px; border-radius: 10px; font-size: 13px; }
+.message.success, .admin-message.success { display: block; color: #087449; background: #e8f7ef; }
+.message.error, .admin-message.error { display: block; color: #b72e3b; background: #fff0f0; }
+
+.admin-panel { display: none; }
+.admin-panel.active { display: block; }
+.admin-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; }
+.admin-heading h2 { margin: 0; }
+.admin-heading .eyebrow { color: var(--blue); }
+.hidden { display: none !important; }
+.admin-list { display: grid; gap: 10px; margin-top: 14px; }
+.admin-date-item, .admin-member-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px; border: 1px solid var(--line); border-radius: 11px; }
+.admin-date-info { display: flex; flex-direction: column; }
+.admin-date-info span { color: var(--muted); font-size: 12px; }
+.admin-date-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.edit-button, .delete-button { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: 12px; }
+.delete-button { color: var(--red); }
+.member-form { display: flex; gap: 8px; }
+.member-form input { flex: 1; }
+.admin-panel hr { margin: 25px 0; border: 0; border-top: 1px solid var(--line); }
+
+.modal { display: none; position: fixed; z-index: 10; inset: 0; align-items: center; justify-content: center; padding: 18px; background: rgba(12,28,48,.55); }
+.modal.active { display: flex; }
+.modal-card { width: min(100%, 460px); padding: 25px; border-radius: 17px; background: #fff; box-shadow: 0 25px 70px rgba(0,0,0,.2); }
+.modal-card h2 { margin: 0 0 18px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
+
+footer { padding: 20px 0 35px; color: var(--muted); text-align: center; font-size: 11px; }
+
+@media (max-width: 650px) {
+  .site-header { padding: 12px 16px; }
+  .brand-mark { width: 40px; height: 40px; }
+  .brand strong { font-size: 12px; }
+  .container { width: min(100% - 22px, 900px); }
+  .hero { margin-top: 16px; border-radius: 18px; }
+  .date-item { grid-template-columns: 1fr; gap: 12px; }
+  .date-options { grid-template-columns: 1fr 1fr; }
+  .summary-list { grid-template-columns: 1fr; }
+  .attendance-summary { grid-template-columns: 1fr; }
+  .attendance-card { grid-template-columns: 1fr auto auto; }
+  .attendance-card strong { grid-row: auto; }
+  .member-form { flex-direction: column; }
+  .admin-date-item, .admin-member-item { align-items: flex-start; flex-direction: column; }
+  .admin-date-actions { width: 100%; }
+  .admin-date-actions button { flex: 1; }
+}
+
+
+/* ========================================
+   だれくる｜KSEC 1st
+   既存HTMLとのクラス名を合わせる復旧CSS
+======================================== */
+
+/* ヘッダー */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  width: min(100% - 32px, 1060px);
+  min-height: 78px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  color: white;
+  font-size: 23px;
+  box-shadow: 0 5px 14px rgba(18, 59, 112, .18);
+}
+
+.brand-sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: 3px;
+}
+
+.admin-button {
+  padding: 10px 15px;
+  border: 1px solid #d5e1f0;
+  border-radius: 10px;
+  background: white;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 800;
+  transition: .2s;
+}
+
+.admin-button:hover {
+  background: var(--blue-light);
+  border-color: var(--blue);
+}
+
+/* メインエリア */
+.container {
+  width: min(100% - 32px, 900px);
+  margin: 0 auto;
+}
+
+/* メインビジュアル */
+.hero {
+  margin: 28px 0 22px;
+  padding: clamp(28px, 6vw, 52px);
+  border-radius: 24px;
+  background: linear-gradient(125deg, #102e56 0%, #1c5c9d 100%);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.hero-label {
+  display: inline-block;
+  margin-bottom: 13px;
+  color: #c4e0ff;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 2px;
+}
+
+.hero h2 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(28px, 5vw, 42px);
+  line-height: 1.4;
+}
+
+.hero h2 span {
+  color: #fff;
+}
+
+.hero p {
+  position: relative;
+  z-index: 1;
+  margin: 14px 0 0;
+  color: #e0edff;
+  font-size: 14px;
+}
+
+/* カード共通 */
+.card,
+.info-card {
+  margin: 20px 0;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 24px;
+}
+
+.section-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--blue-light);
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.section-title > div > span {
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 1.7px;
+}
+
+.section-title h3 {
+  margin: 2px 0 0;
+  font-size: 20px;
+  line-height: 1.45;
+}
+
+.section-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: var(--blue-light);
+  font-size: 22px;
+}
+
+/* フォーム */
+.form-group {
+  margin: 20px 0;
+}
+
+.form-group label,
+.attendance-selector label {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.required {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: #fff0f0;
+  color: var(--red);
+  font-size: 10px;
+  vertical-align: 2px;
+}
+
+.form-description {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.name-select {
+  width: 100%;
+}
+
+.date-list {
+  border-top: 1px solid var(--line);
+}
+
+.date-item {
+  display: grid;
+  grid-template-columns: minmax(130px, .7fr) minmax(0, 1.3fr);
+  gap: 18px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.date-name {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.date-name small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.date-answer-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.date-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.choice-button {
+  min-height: 45px;
+  border: 1px solid #dce3ed;
+  border-radius: 10px;
+  background: #fff;
+  color: #46566a;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.choice-button.selected-yes {
+  border-color: #58b78c;
+  background: #e8f7ef;
+  color: #087449;
+}
+
+.choice-button.selected-no {
+  border-color: #e69aa2;
+  background: #fff0f0;
+  color: #b72e3b;
+}
+
+.attendance-time-area {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.attendance-time-area label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.attendance-time-select {
+  min-height: 42px;
+  font-size: 13px;
+}
+
+.submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 54px;
+  margin-top: 24px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(110deg, var(--navy), var(--blue));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 850;
+  box-shadow: 0 7px 18px rgba(36, 104, 180, .2);
+  transition: transform .2s, box-shadow .2s;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(36, 104, 180, .28);
+}
+
+.button-arrow {
+  font-size: 20px;
+}
+
+/* 登録について */
+.info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #f7faff;
+}
+
+.info-icon {
+  flex-shrink: 0;
+  font-size: 22px;
+}
+
+.info-card h3 {
+  margin: 0 0 5px;
+  font-size: 14px;
+}
+
+.info-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* 参加状況一覧 */
+.summary-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+
+.summary-date {
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.summary-count {
+  margin-top: 8px;
+  color: var(--blue);
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.summary-count span {
+  margin-left: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+
+.table-wrapper th {
+  background: #f0f5fc;
+  color: #53657b;
+  font-size: 12px;
+}
+
+.table-wrapper th:first-child,
+.table-wrapper td:first-child {
+  text-align: left;
+}
+
+.table-wrapper tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.loading {
+  padding: 18px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* 各回の参加状況 */
+.attendance-section {
+  margin: 22px 0;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.attendance-section .section-title h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.attendance-section .section-title p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.attendance-selector {
+  margin: 18px 0;
+}
+
+.attendance-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.attendance-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 5px 10px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+}
+
+.attendance-card-icon,
+.attendance-card-label {
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.attendance-card strong {
+  grid-row: span 2;
+  font-size: 30px;
+}
+
+.attendance-card.available {
+  background: #f0faf5;
+}
+
+.attendance-card.unavailable {
+  background: #fff5f5;
+}
+
+.attendance-card.unanswered {
+  background: #f6f8fb;
+}
+
+.attendance-member-box {
+  margin-top: 13px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+
+.attendance-member-box h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+
+.attendance-member-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.attendance-member {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  background: #f4f7fb;
+  font-size: 13px;
+}
+
+.attendance-member-time {
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: #e4efff;
+  color: #245b9e;
+  font-size: 11px;
+}
+
+.attendance-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* メッセージ */
+.message,
+.admin-message {
+  display: none;
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.message.success,
+.admin-message.success {
+  display: block;
+  color: #087449;
+  background: #e8f7ef;
+}
+
+.message.error,
+.admin-message.error {
+  display: block;
+  color: #b72e3b;
+  background: #fff0f0;
+}
+
+/* 管理者画面 */
+.admin-panel {
+  display: none;
+  margin: 22px 0;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.admin-panel.active {
+  display: block;
+}
+
+.admin-panel-header,
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.admin-panel-header {
+  margin-bottom: 24px;
+}
+
+.admin-panel-header > div > span {
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 1.7px;
+}
+
+.admin-panel-header h2 {
+  margin: 3px 0 0;
+  font-size: 23px;
+}
+
+.close-button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 24px;
+}
+
+.admin-login {
+  padding: 18px;
+  border-radius: 12px;
+  background: #f5f8fd;
+}
+
+.admin-login p {
+  margin: 0 0 12px;
+  font-size: 13px;
+}
+
+.admin-login-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-login-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.primary-small-button,
+.primary-button,
+.secondary-button {
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.primary-small-button,
+.primary-button {
+  background: var(--blue);
+  color: #fff;
+}
+
+.primary-small-button:hover,
+.primary-button:hover {
+  background: var(--navy);
+}
+
+.secondary-button {
+  border-color: var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.admin-toolbar {
+  margin: 24px 0 14px;
+}
+
+.admin-toolbar strong {
+  font-size: 14px;
+}
+
+.admin-toolbar p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.admin-date-list,
+.admin-member-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.admin-date-item,
+.admin-member-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+}
+
+.admin-date-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-date-info span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.admin-date-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.edit-button,
+.delete-button {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.delete-button {
+  color: var(--red);
+}
+
+.member-add-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.member-add-area input {
+  flex: 1;
+  min-width: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 日程追加・編集モーダル */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 18px;
+  background: rgba(12, 28, 48, .6);
+  backdrop-filter: blur(4px);
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  width: min(100%, 460px);
+  max-height: calc(100dvh - 36px);
+  overflow-y: auto;
+  padding: 25px;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, .2);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.modal-header > div > span {
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 1.5px;
+}
+
+.modal-header h2 {
+  margin: 3px 0 0;
+  font-size: 21px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+/* フッター */
+.footer {
+  padding: 25px 16px 35px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 11px;
+}
+
+.footer p {
+  margin: 0 0 4px;
+  font-weight: 850;
+  letter-spacing: 1.2px;
+}
+
+.footer span {
+  font-size: 10px;
+}
+
+/* スマートフォン */
+@media (max-width: 650px) {
+  .header-inner {
+    width: calc(100% - 24px);
+    min-height: 68px;
+    gap: 10px;
+  }
+
+  .brand-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    font-size: 20px;
+  }
+
+  .brand {
+    gap: 9px;
+  }
+
+  .brand h1 {
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+
+  .brand-sub {
+    font-size: 9px;
+  }
+
+  .admin-button {
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+
+  .container {
+    width: calc(100% - 22px);
+  }
+
+  .hero {
+    margin-top: 16px;
+    padding: 28px 22px;
+    border-radius: 18px;
+  }
+
+  .card,
+  .info-card,
+  .attendance-section,
+  .admin-panel {
+    padding: 20px 16px;
+    border-radius: 15px;
+  }
+
+  .section-title h3,
+  .attendance-section .section-title h2 {
+    font-size: 17px;
+  }
+
+  .date-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .summary-list {
+    grid-template-columns: 1fr;
+  }
+
+  .attendance-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .attendance-card {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .attendance-card strong {
+    grid-row: auto;
+  }
+
+  .admin-login-row,
+  .member-add-area {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-date-item,
+  .admin-member-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-date-actions {
+    width: 100%;
+  }
+
+  .admin-date-actions button {
+    flex: 1;
+  }
+
+  .modal-content {
+    padding: 20px;
+  }
+}
+
+
+/* ========================================
+   日程選択をカード形式に変更
+======================================== */
+
+#date-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 0;
+}
+
+/* 日程カード */
+#date-list .date-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid #dce6f3;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 5px 18px rgba(25, 55, 90, 0.06);
+  transition: transform .2s ease, box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+#date-list .date-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 4px;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(90deg, var(--navy), #65a7ef);
+}
+
+#date-list .date-item:hover {
+  transform: translateY(-3px);
+  border-color: #b8d1f0;
+  box-shadow: 0 12px 26px rgba(25, 55, 90, 0.1);
+}
+
+/* 日程名・日付 */
+#date-list .date-name {
+  display: block;
+  color: var(--navy);
+  font-size: 16px;
+  font-weight: 850;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+#date-list .date-name small {
+  display: inline-block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* 回答ボタン */
+#date-list .date-answer-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+
+#date-list .date-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+#date-list .choice-button {
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 6px;
+  border: 1px solid #d7e1ee;
+  border-radius: 11px;
+  background: #fff;
+  color: #53657b;
+  font-size: 13px;
+  font-weight: 800;
+  transition: background .18s ease, border-color .18s ease,
+    transform .18s ease;
+}
+
+#date-list .choice-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--blue);
+}
+
+#date-list .choice-button.selected-yes {
+  border-color: #42a879;
+  background: #e8f7ef;
+  color: #087449;
+  box-shadow: inset 0 0 0 1px rgba(66, 168, 121, .12);
+}
+
+#date-list .choice-button.selected-no {
+  border-color: #df8791;
+  background: #fff0f0;
+  color: #b72e3b;
+  box-shadow: inset 0 0 0 1px rgba(195, 61, 75, .08);
+}
+
+/* 午前・午後などの選択 */
+#date-list .attendance-time-area {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid #dce8f7;
+  border-radius: 11px;
+  background: #f1f6fd;
+}
+
+#date-list .attendance-time-area label {
+  margin: 0;
+  color: #53657b;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#date-list .attendance-time-select {
+  width: 100%;
+  min-height: 43px;
+  border-color: #d2deee;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 13px;
+}
+
+/* 読み込み表示 */
+#date-list > .loading {
+  grid-column: 1 / -1;
+  padding: 25px 16px;
+  border: 1px dashed #cbd9eb;
+  border-radius: 13px;
+  background: #f8fbff;
+  text-align: center;
+}
+
+/* スマホは1列 */
+@media (max-width: 650px) {
+  #date-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 13px;
+  }
+
+  #date-list .date-item {
+    gap: 15px;
+    padding: 20px 17px;
+  }
+
+  #date-list .date-name {
+    font-size: 15px;
+  }
+
+  #date-list .choice-button {
+    min-height: 48px;
+    font-size: 14px;
+  }
+}
+
+/* ========================================
+   所属表示
+======================================== */
+
+.affiliation-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.affiliation-student {
+  color: #245b9e;
+  background: #e7f1ff;
+  border: 1px solid #c5dcfb;
+}
+
+.affiliation-ksv {
+  color: #087449;
+  background: #e5f7ee;
+  border: 1px solid #b8e5ce;
+}
+
+.affiliation-unknown {
+  color: #64748b;
+  background: #f1f5f9;
+  border: 1px solid #dbe3ed;
+}
+
+.admin-member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.admin-member-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-member-controls select {
+  width: auto;
+  min-width: 180px;
+  min-height: 38px;
+  font-size: 12px;
+}
+
+.attendance-member {
+  align-items: center;
+}
+
+.attendance-member .affiliation-badge {
+  font-size: 10px;
+}
+
+@media (max-width: 650px) {
+  .member-add-area {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-member-controls {
+    width: 100%;
+  }
+
+  .admin-member-controls select {
+    width: 100%;
+  }
+}
+
+/* ==================================================
+   所属別表示
+================================================== */
+
+.attendance-affiliation-group {
+  margin-bottom: 16px;
+}
+
+.attendance-group-title {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* 生徒会：黄色 */
+.affiliation-student {
+  background: #ffffdd;
+  color: #382c02;
+}
+
+/* KSV */
+.affiliation-ksv {
+  background: #d9eaff;
+  color: #174b80;
+}
+
+/* 所属未設定 */
+.affiliation-unknown {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* ==================================================
+   参加可能メンバーを横並びにする
+================================================== */
+
+.attendance-affiliation-group {
+  margin-bottom: 18px;
+}
+
+.attendance-affiliation-group .attendance-group-title {
+  display: block;
+  width: fit-content;
+  margin-bottom: 8px;
+}
+
+.attendance-affiliation-group .attendance-member {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  margin: 0 8px 8px 0;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: #f1f3f5;
+  gap: 0;
+}
+
+/* 参加時間ラベルを元のデザインに戻す */
+.attendance-affiliation-group .attendance-member {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 7px;
+  width: auto;
+  margin: 0 8px 8px 0;
+  padding: 9px 11px;
+}
+
+.attendance-affiliation-group .attendance-member-time {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: #e4efff;
+  color: #245b9e;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* ================================
+   締切表示
+================================ */
+
+.vote-deadline {
+  margin-top: 9px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #eef5ff;
+  color: #245b9e;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.vote-deadline.closed {
+  background: #fff1f0;
+  color: #b42318;
+}
+
+.vote-closed-message {
+  margin-top: 8px;
+  padding: 11px;
+  border-radius: 8px;
+  background: #fff7e8;
+  color: #805300;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.date-item.vote-closed .choice-button,
+.date-item.vote-closed .attendance-time-select {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ================================
+   当日欠席連絡
+================================ */
+
+.absence-report-section {
+  margin: 28px 0;
+  padding: 22px;
+  border: 1px solid #dce5f0;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.absence-report-section h3 {
+  margin: 0 0 10px;
+}
+
+.absence-report-section select,
+.absence-report-section textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccd6e2;
+  border-radius: 9px;
+  font: inherit;
+  background: #ffffff;
+  color: #222222;
+}
+
+.absence-report-section textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+#absence-message {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.admin-absence-section {
+  margin-top: 30px;
+  padding: 18px;
+  border: 1px solid #dce5f0;
+  border-radius: 12px;
+}
+
+.admin-absence-item {
+  padding: 14px;
+  margin-top: 12px;
+  border: 1px solid #e1e7ef;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.admin-absence-item p {
+  margin: 6px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ================================
+   生徒登録欄の幅調整
+================================ */
+
+.member-add-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 115px auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.member-add-area #new-member-name {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.member-add-area #new-member-affiliation {
+  width: 115px;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px 8px;
+  border: 1px solid #ccd6e2;
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+}
+
+.member-add-area #add-member-button {
+  white-space: nowrap;
+}
+
+@media (max-width: 650px) {
+  .member-add-area {
+    grid-template-columns: minmax(0, 1fr) 105px;
+    align-items: stretch;
+  }
+
+  .member-add-area #new-member-affiliation {
+    width: 105px;
+  }
+
+  .member-add-area #add-member-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .absence-report-section {
+    padding: 16px;
+  }
+}
+
+/* 追加機能のレイアウト最終調整 */
+.date-name .vote-deadline { font-weight: 600; line-height: 1.5; }
+.date-item.vote-closed .choice-button:disabled { pointer-events: none; }
+.absence-report-section .form-group { margin-bottom: 14px; }
+.absence-report-section .submit-button { width: 100%; }
+.member-add-area > input { min-width: 0; }
